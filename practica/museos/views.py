@@ -35,17 +35,17 @@ def user(request, name):
 def museums(request):
 	# El filtrado de los distritos estaria bien con un desplegable con opciones
 	# El formulario en un templete.
+	# Añadir CSS
 	
 	if request.method == 'GET':
 		museums = Museums.objects.all()
 		response = "<ul>"
 		for museum in museums:
-			response += museum.Name + "<a href='//" + MACHINE + ":" + str(PORT) + "/museos/" + str(museum.id) + "'> Enlace</a><br>"
+			response += "<a href='//" + MACHINE + ":" + str(PORT) + "/museos/" + str(museum.id) + "'>" + museum.Name + "</a><br>"
 		response += "</ul>"
 		return HttpResponse("museos" + form + response) 
 	elif request.method == 'POST':
 		dm = request.POST['Distrito']
-		print(dm)
 		district_museums = Museums.objects.filter(District = dm)
 		response = "<ul>"
 		for district_museum in district_museums:
@@ -53,12 +53,25 @@ def museums(request):
 		response += "</ul>"
 		return HttpResponse("museos " + response)
 	else:
-		response = "Method Not Allowed"
+		response = "Method not allowed"
 		return HttpResponse(response, status = 405)
 
 
 def museum_page(request, id):
-	return HttpResponse("Pagina del museo" + str(id))
+	# Mostrar todos los datos del museo y los comentarios asociados
+	try:
+		print("aqui")
+		museum = Museums.objects.get(id = id)
+		comments = Comments.objects.filter(Museum = museum)
+		response = "<ul>"
+		for commentary in comments:
+			response += commentary.Commentary + "<br>"
+		response += "</ul>"
+
+		return HttpResponse(museum.Name + response)	# Falta mostrar todos los datos restantes del museo
+	except Museums.DoesNotExist:
+		response = "Page not found"
+		return HttpResponseNotFound(response)
 
 def xml_user(request, name):
 	return HttpResponse("XML del usuario " + name)
