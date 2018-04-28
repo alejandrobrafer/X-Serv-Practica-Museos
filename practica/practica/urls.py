@@ -16,5 +16,11 @@ from django.conf.urls import include, url
 from django.contrib import admin
 
 urlpatterns = [
+ 	url(r'^about$', 'museos.views.about', name = "Pagina para mas informacion."),
+	url(r'^museos/(\d+)$', 'museos.views.museum_page', name = "Pagina del museo."),
+	url(r'^museos$', 'museos.views.museums', name = "Listado con todos los museos."),
+	url(r'^$', 'museos.views.home', name = "Pagina principal"),
     url(r'^admin/', include(admin.site.urls)),
+    url(r'^(.+)/xml$', 'museos.views.xml_user', name = "Canal XML del usuario."),
+    url(r'^(.+)$', 'museos.views.user', name = "Pagina del usuario."),
 ]
