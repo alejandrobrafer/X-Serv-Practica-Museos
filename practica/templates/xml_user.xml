@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<contenidos>
+	<infoDataset>
+		<nombre>Museos de la ciudad de Madrid seleccionados por {{ user }}</nombre>
+		<descripcion> Canal XML para los museos seleccionados por {{ user }}</descripcion>
+	</infoDataset>
+	<contenido>
+		
+		{% for selected in selection %}
+			<atributos idioma="en">
+				<atributo name = "NAME">{{ selected.Museum.Name }}</atributo>
+				<atributo name = "DESCRIPTION">{{ selected.Museum.Description }}</atributo>
+				<atributo name = "SCHEDULE">{{ selected.Museum.Schedule }}</atributo>
+				<atributo name = "TRANSPORT">{{ selected.Museum.Transport }}</atributo>
+				<atributo name = "ACCESSIBILITY">{{ selected.Museum.Accessibility }}</atributo>
+				<atributo name = "URL">{{ selected.Museum.URL }}</atributo>
+				<atributo name = "STREET_NAME">{{ selected.Museum.Street_Name }}</atributo>
+				<atributo name = "STREET_TYPE">{{ selected.Museum.Street_Type }}</atributo>
+				<atributo name = "STREET_NUM">{{ selected.Museum.Street_Num }}</atributo>
+				<atributo name = "LCOALITY">{{ selected.Museum.Locality }}</atributo>
+				<atributo name = "PROVINCE">{{ selected.Museum.Province }}</atributo>
+				<atributo name = "POSTAL_CODE">{{ selected.Museum.Postal_Code }}</atributo>
+				<atributo name = "NEIGHBORHOOD">{{ selected.Museum.Neighborhood }}</atributo>
+				<atributo name = "DISTRICT">{{ selected.Museum.District }}</atributo>
+				<atributo name = "COO_X">{{ selected.Museum.Coor_X }}</atributo>
+				<atributo name = "COO_Y">{{ selected.Museum.CoorY }}</atributo>
+				<atributo name = "LATITUDE">{{ selected.Museum.Latitude }}</atributo>
+				<atributo name = "LENGHT">{{ selected.Museum.Length }}</atributo>
+				<atributo name = "PHONE">{{ selected.Museum.Phone }}</atributo>
+				<atributo name = "EMAIL">{{ selected.Museum.Email }}</atributo> 
+			</atributos>
+		{% endfor %}
+	</contenido>
+</contenidos>

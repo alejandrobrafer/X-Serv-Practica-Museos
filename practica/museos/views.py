@@ -4,6 +4,7 @@ from django.shortcuts import render_to_response
 from django.http import HttpResponse, HttpResponseNotFound
 from django.views.decorators.csrf import csrf_exempt
 from museos.models import Museums, Selected, Comments, User_Page
+from django.contrib.auth.models import User
 
 MACHINE = "localhost"
 PORT = 8000
@@ -30,46 +31,7 @@ def home(request):
 
 @csrf_exempt
 def user(request, name):
-	if request.method == 'GET':
-		#Falta que solo se filtren de 5 en 5
-		users = Selected.objects.filter(User = name)
-		total_selected = ""
-		x = 0
-		total_selected = {}
-		for user in users:
-			museum = Museums.objects.get(Name = user.Museum)
-			date_selected = Selected.objects.filter(id = user.id).get(Museum = museum)
-			date = date_selected.Date
-
-			name, street_type, street_num, street_name, province, link = museum.Name, museum.Street_Type, museum.Street_Num, museum.Street_Name, museum.Province, "<a href='//" + MACHINE + ":" + str(PORT) + "/museos/" + str(museum.id) + "'>Más información</a>"
-			info = "nombre = " + str(name) + " dirección = " + str(street_type) + " " + str(street_name) + " " + str(street_num)  + " " + str(province) + " enlace = " + link + " fecha = " + str(date) + "<br/>"
-			total_selected[x] = info
-			x += 1
-
-		if len(total_selected) > 5:	
-			response = ""
-			for x in range(5):
-				response += total_selected[x] + "<br/>"
-
-		#Bucle para guardarme los elementos aun no mostrados
-			saved_selection = {}
-			y = 0
-			for x in (x, len(total_selected) - 1):
-				saved_selection[y] = total_selected[x]
-				y += 1 
-		else:
-			x = 0
-			response = ""
-			for x in (x, len(total_selected) - 1):
-				response += total_selected[x] + "<br/>"
-
-		return render_to_response('form.html', {'response': response, 'text': saved_selection, 'active': 0}) 
-	
-	elif request.method == 'POST':
-		return HttpResponse("hola")
-	else:
-		response = "Method not allowed"
-		return HttpResponse(response, status = 405)
+	return HttpResponse("hola")
 
 
 @csrf_exempt
@@ -114,7 +76,15 @@ def museum_page(request, id):
 		return HttpResponseNotFound(response)
 
 def xml_user(request, name):
-	return HttpResponse("XML del usuario " + name)
+	try:
+		user = User.objects.get(username = name)
+	except User.DoesNotExist:
+		# NOTA: MEJORAR CON EL USO DE UN TEMPLATES PARA USUARIO NO EXISTENTE
+		return HttpResponseNotFound("USER NOT EXIT.")
+
+	museum_selection = Selected.objects.filter(User = user)
+	# EL content_type = "text/xml" INDICA COMO QUIERO MOSTRAR LOS DATOS EN EL NAVEGADOR
+	return render_to_response('xml_user.xml', {'user': user, 'selection':museum_selection}, content_type = "text/xml")
 
 def about(request):
 	return HttpResponse("About")
