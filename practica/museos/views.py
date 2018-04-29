@@ -4,6 +4,7 @@ from django.shortcuts import render_to_response
 from django.http import HttpResponse, HttpResponseNotFound
 from django.views.decorators.csrf import csrf_exempt
 from museos.models import Museums, Selected, Comments, User_Page
+# ACCESO A TRAVES DE ESTE MODELO DADO QUE UN USUARIO SOLO PUEDE TENER MUSEOS SELECCIONADOS SI ESTA REGISTRADO
 from django.contrib.auth.models import User
 
 MACHINE = "localhost"
@@ -31,6 +32,13 @@ def home(request):
 
 @csrf_exempt
 def user(request, name):
+	try:
+		user = User.objects.get(username = name)
+	except User.DoesNotExist:
+		# NOTA: MEJORAR CON EL USO DE UN TEMPLATES PARA USUARIO NO EXISTENTE
+		return HttpResponseNotFound("USER NOT EXIT.")
+	
+	selection = Selected.objects.filter(User = user)
 	return HttpResponse("hola")
 
 
@@ -70,7 +78,7 @@ def museum_page(request, id):
 			response += commentary.Commentary + "<br>"
 		response += "</ul>"
 
-		return HttpResponse(museum.Name + response)	# Falta mostrar todos los datos restantes del museo
+		return HttpResponse(museum.Name + response)	# Falta mostrar todos los datos restantes del museo --- Solucion igual que xml-user con un HTML
 	except Museums.DoesNotExist:
 		response = "Page not found"
 		return HttpResponseNotFound(response)
@@ -82,9 +90,10 @@ def xml_user(request, name):
 		# NOTA: MEJORAR CON EL USO DE UN TEMPLATES PARA USUARIO NO EXISTENTE
 		return HttpResponseNotFound("USER NOT EXIT.")
 
-	museum_selection = Selected.objects.filter(User = user)
+	selection = Selected.objects.filter(User = user)
 	# EL content_type = "text/xml" INDICA COMO QUIERO MOSTRAR LOS DATOS EN EL NAVEGADOR
-	return render_to_response('xml_user.xml', {'user': user, 'selection':museum_selection}, content_type = "text/xml")
+	return render_to_response('xml_user.xml', {'user': user, 'selection': selection}, content_type = "text/xml")
+
 
 def about(request):
 	return HttpResponse("About")
