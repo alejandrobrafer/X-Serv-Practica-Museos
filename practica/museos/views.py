@@ -28,8 +28,26 @@ def home(request):
 	# Boton
 	return HttpResponse("home")
 
+@csrf_exempt
 def user(request, name):
-	return HttpResponse("Pagina del usuario " + name)
+	#Falta que solo se filtren de 5 en 5
+	users = Selected.objects.filter(User = name)
+	total_selected = ""
+	x = 0
+	total_selected = {}
+	for user in users:
+		x += 1
+		museum = Museums.objects.get(Name = user.Museum)
+		date_selected = Selected.objects.filter(id = user.id).get(Museum = museum)
+		date = date_selected.Date
+
+		name, street_type, street_num, street_name, province, link = museum.Name, museum.Street_Type, museum.Street_Num, museum.Street_Name, museum.Province, "<a href='//" + MACHINE + ":" + str(PORT) + "/museos/" + str(museum.id) + "'>Más información</a>"
+		mostrar = "nombre = " + str(name) + " dirección = " + str(street_type) + " " + str(street_name) + " " + str(street_num)  + " " + str(province) + " enlace = " + link + " fecha = " + str(date) + "<br/>"
+		total_selected[x] = mostrar
+
+	print(str(len(total_selected)))
+	return HttpResponse(total_selected[1])
+
 
 @csrf_exempt
 def museums(request):
@@ -60,7 +78,6 @@ def museums(request):
 def museum_page(request, id):
 	# Mostrar todos los datos del museo y los comentarios asociados
 	try:
-		print("aqui")
 		museum = Museums.objects.get(id = id)
 		comments = Comments.objects.filter(Museum = museum)
 		response = "<ul>"
