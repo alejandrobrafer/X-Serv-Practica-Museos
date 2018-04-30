@@ -6,6 +6,8 @@ from django.views.decorators.csrf import csrf_exempt
 from museos.models import Museums, Selected, Comments, User_Page
 # ACCESO A TRAVES DE ESTE MODELO DADO QUE UN USUARIO SOLO PUEDE TENER MUSEOS SELECCIONADOS SI ESTA REGISTRADO
 from django.contrib.auth.models import User
+# https://docs.djangoproject.com/en/2.0/topics/db/aggregation/ --> Para mostrar los museos con mas comentarios
+from django.db.models import Count
 
 MACHINE = "localhost"
 PORT = 8000
@@ -18,17 +20,33 @@ form = """
 <br><br>
 """
 
+# NOTA: HE SUPUESTO QUE UNICAMENTE LOS USUARIOS QUE SE ENCUENTRAS REGISTRADOS SON LOS QUE TENDRAN PAGINA
 def home(request):
-	return HttpResponse("home")
 
 	# Abra una parte con el filtrado del XML de Museos de Madrid.
 
 	# Listado de los 5 museos con mas comentario
-
+	# NOTA: ME SALTA EL PROBLEMA DE QUE SIEMPRE SALEN 5 AUN NO HABIENDO COMENTARIO
+	
+	commented_museums = Museums.objects.annotate(num_comments = Count('comments')).order_by('-num_comments')[:5]
+	response = ""
+	for commented_museum in commented_museums:
+		response += commented_museum.Name + "<br/>"
+	
 	# Listado con enlaces a las paginas personales
+	response1 = ""
+	pages = User_Page.objects.all()
+	for name in pages:
+		username = name.User
+		link = "<a href='//" + MACHINE + ":" + str(PORT) + "/" + username + "'>" + username + "</a><br>"
+		title = name.Title
+		if not title:
+			title = "Página de " + username
+		show = link + title
+		response1 += show + "<br/>"
 
 	# Boton
-	return HttpResponse("home")
+	return HttpResponse(response + response1)
 
 @csrf_exempt
 def user(request, name):
