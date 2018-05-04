@@ -57,12 +57,16 @@ def home(request):
 		button = "<a href='//" + MACHINE + ":" + str(PORT) + "/" + "?" + qs + "'>" + "MAS" + "</a><br>"
 	elif qs == "ACCESIBLES":
 		# NOTA LOS PRINT SON DE COPROBACION, DEBERIAN IR EN EL HTML
+		qs = "TODOS"
 		access_museums = Museums.objects.filter(Accessibility = 1)
 		print(access_museums)
 		button = "<a href='//" + MACHINE + ":" + str(PORT) + "/" + "?" + qs + "'>" + "MAS" + "</a><br>"
 	elif qs == "TODOS":
+		# NOTA LOS PRINT SON DE COPROBACION, DEBERIAN IR EN EL HTML
+		all_museums = Museums.objects.all()
+		print(all_museums)
 		button = "<a href='//" + MACHINE + ":" + str(PORT) + "/" + "?" + qs + "'>" + "MAS" + "</a><br>"
-	return HttpResponse(response + response1)
+	return HttpResponse(response + response1 + button)
 
 @csrf_exempt
 def user(request, name):
