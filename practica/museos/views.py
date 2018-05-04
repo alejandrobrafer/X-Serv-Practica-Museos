@@ -26,12 +26,14 @@ def home(request):
 	# Abra una parte con el filtrado del XML de Museos de Madrid.
 
 	# Listado de los 5 museos con mas comentario
-	# NOTA: ME SALTA EL PROBLEMA DE QUE SIEMPRE SALEN 5 AUN NO HABIENDO COMENTARIO
-	
+	# Con el annotate(num_comments) es como si añadieramos a la tabla Museums un nuevo campo denominado numero de comentarios
 	commented_museums = Museums.objects.annotate(num_comments = Count('comments')).order_by('-num_comments')[:5]
 	response = ""
 	for commented_museum in commented_museums:
-		response += commented_museum.Name + "<br/>"
+		# NOTA: ME SALTA EL PROBLEMA DE QUE SIEMPRE SALEN 5 AUN NO HABIENDO COMENTARIO
+		# SOLUCION
+		if commented_museum.num_comments > 0:
+			response += commented_museum.Name + "<br/>"
 	
 	# Listado con enlaces a las paginas personales
 	response1 = ""
@@ -46,19 +48,62 @@ def home(request):
 		response1 += show + "<br/>"
 
 	# Boton
+	# Obtención de la Query String
+	# https://docs.djangoproject.com/en/1.8/ref/request-response/
+	qs = request.META['QUERY_STRING']
+
+	if qs == "":
+		qs = "ACCESIBLES"
+		button = "<a href='//" + MACHINE + ":" + str(PORT) + "/" + "?" + qs + "'>" + "MAS" + "</a><br>"
+	elif qs == "ACCESIBLES":
+		# NOTA LOS PRINT SON DE COPROBACION, DEBERIAN IR EN EL HTML
+		access_museums = Museums.objects.filter(Accessibility = 1)
+		print(access_museums)
+		button = "<a href='//" + MACHINE + ":" + str(PORT) + "/" + "?" + qs + "'>" + "MAS" + "</a><br>"
+	elif qs == "TODOS":
+		button = "<a href='//" + MACHINE + ":" + str(PORT) + "/" + "?" + qs + "'>" + "MAS" + "</a><br>"
 	return HttpResponse(response + response1)
 
 @csrf_exempt
 def user(request, name):
+	# NOTA: QUE PASA SI EL MISMO USUARIO SELECCIONA EL MISMO MUSEO 2 O MAS VECES
+	# POSIBLE SOLUCION:
+	# Obtengo los valores unicos de una lista
+    # http://stackoverflow.com/questions/12897374/get-unique-values-from-a-list-in-python
+	# NOTA: FALTA LA FECHA DE SELECCION
 	try:
 		user = User.objects.get(username = name)
 	except User.DoesNotExist:
 		# NOTA: MEJORAR CON EL USO DE UN TEMPLATES PARA USUARIO NO EXISTENTE
 		return HttpResponseNotFound("USER NOT EXIT.")
-	
-	selection = Selected.objects.filter(User = user)
-	return HttpResponse("hola")
 
+	# Obtención de la Query String
+	# https://docs.djangoproject.com/en/1.8/ref/request-response/
+	qs = request.META['QUERY_STRING']
+	
+	if qs == "":
+		qs = 0
+		# 1 usuario = 1 museo seleccionado --> museo = usuario
+		# Lo que muestro son los 5 primeros 
+
+		# NOTA LOS PRINT SON DE COPROBACION, DEBERIAN IR EN EL HTML
+		print("Mostrados los primeros 5 museos")
+		museums = Selected.objects.filter(User = user)[qs:((qs + 1) * 5)]
+		print(museums)
+	else:
+		print("Mostrados los sigueintes museos")
+		qs = int(qs)
+		museums = Selected.objects.filter(User = user)[(qs * 5):((qs + 1) * 5)]
+		print(museums)
+
+	#¿necesito mostrar el enlace MAS?
+	more_museums = Selected.objects.filter(User = user)[((qs + 1) * 5):]
+	more = ""
+	if len(more_museums) > 0:
+		qs += 1
+		more = "<a href='//" + MACHINE + ":" + str(PORT) + "/" + name + "?" + str(qs) + "'>" + "MAS" + "</a><br>"
+
+	return HttpResponse(more)
 
 @csrf_exempt
 def museums(request):
