@@ -1,10 +1,10 @@
 {% extends "index.html" %}
 
 
-<!-- En la pagina principal en el cuadrado de la izquierda, mostrará el listado con las paginas personales-->
+<!-- En la página principal en el cuadrado de la izquierda, mostrará el listado con las páginas personales disponibles-->
 {% block leftpanel %}
-	<center><span class="smalltitle">Paginas personales</span></center><br/><br/>
-	{{ personal_pages |safe}}
+	<center><span class="smalltitle">Páginas personales</span></center><br/><br/>
+	<center>{{ personal_pages |safe}}</center>
 {% endblock %}
 
 
@@ -15,16 +15,36 @@
 </div>
 
 <div class="bodytext" style="padding:12px;" align="justify">
-	<strong>Gracias por aparecer en la página de museos de la asignatura de Servicios y Aplicaciones en Redes de Ordenadores.<br/>
+	<strong>Gracias por aparecer en la página de museos de la asignatura de Servicios y Aplicaciones en Redes de Ordenadores.<br/><br/>
 	En la parte inferior, se muestra un listado con los museos más comentados actualmente:</strong><br/><br/>
-
-	{% for commented_museum in commented_museums %}
-		{% if commented_museum.num_comments > 0%}
-		<ul><a href='{{commented_museum.URL}}'>{{commented_museum.Name}}</a>  {{commented_museum.Street_Name}}  
-			<a href='//localhost:8000/museos/{{commented_museum.id}}'>Más informacion</a><br/></ul>
-		{% endif %}
-	{% endfor %}
 	
-	{{button | safe}}		
+	<table border=”0″ cellpadding=”0″ cellspacing=”0″ align="center">
+		<tr>
+			<th><center>Nombre</center></th>
+			<th><center>Dirección</center></th>
+			<th><center>Enlace</center></th>
+		<tr>
+		{% for commented_museum in commented_museums %}
+			{% if commented_museum.num_comments > 0 %}
+				<tr>
+					<th><a href='{{commented_museum.URL | safe}}' target="_blank">{{commented_museum.Name | safe}}</a></th>
+					<td>{{commented_museum.Street_Type | safe}} {{commented_museum.Street_Name | safe}} {{commented_museum.Street_Num | safe}}</td>
+					<td><a href='//localhost:8000/museos/{{commented_museum.id | safe}}'>Más información</a></td>
+				</tr>
+			{% endif %}
+		{% endfor %}
+	</table>
+
+
+	{% if museums2show %}
+		<br/><br/><strong>No paramos y a continuación os pasamos más información de los museos {{str | safe}}</strong><br/><br/>
+		{% for museum2show in museums2show %}
+			<ul><li><a href='//localhost:8000/museos/{{museum2show.id | safe}}'> {{museum2show.Name | safe}}</a></ul>
+		{% endfor %}
+	{% endif %}
+	
+	{% if button %}
+		<br/><center>{{button | safe}} </center>
+	{% endif %}
 </div>	
 {% endblock %}

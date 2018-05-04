@@ -18,52 +18,45 @@ form = """
 """
 
 def home(request):
-	# NOTA: FALTA EL ANALISIS DE LOS METODOS
-	# Abra una parte con el filtrado del XML de Museos de Madrid.
-
-	# Listado de los 5 museos con mas comentario
-	# Con el annotate(num_comments) es como si añadieramos a la tabla Museums un nuevo campo denominado numero de comentarios
-	commented_museums = Museums.objects.annotate(num_comments = Count('comments')).order_by('-num_comments')[:5]
-	#response = ""
-	#for commented_museum in commented_museums:
-		# NOTA: ME SALTA EL PROBLEMA DE QUE SIEMPRE SALEN 5 AUN NO HABIENDO COMENTARIO
-		# SOLUCION:
-	#	if commented_museum.num_comments > 0:
-	#		response += commented_museum.Name + "<br/>"
-		# NOTA: FALTA POR MOSTRAR MÁS APECTOS DE  LOS MUSEOS COMENTADOS, PERO LO HARE EN EL HTML.
 	
-	# Listado con enlaces a las paginas personales
-	personal_pages = ""
-	pages = User_Page.objects.all()
-	for name in pages:
-		username = name.User
-		title = name.Title
-		if not title:
-			title = "Página de " + username
-		link = "Título: <a href='//" + MACHINE + ":" + str(PORT) + "/" + username + "'>" + title + "</a> Usuario: "
-		show = link + username
-		personal_pages += show + "<br/>"
+	if request.method == 'GET':
+		# Nota: Abra una parte con el filtrado del XML de Museos de Madrid.
 
-	# Boton
-	# Obtención de la Query String
-	# https://docs.djangoproject.com/en/1.8/ref/request-response/
-	qs = request.META['QUERY_STRING']
+		museums2show = None
+		string = ""
+		# Obtención de la Query String: https://docs.djangoproject.com/en/1.8/ref/request-response/
+		qs = request.META['QUERY_STRING']
+		# 1/ Listado de los 5 museos con más comentario: https://docs.djangoproject.com/en/2.0/topics/db/aggregation/
+		# Con el annotate(num_comments) es como si añadieramos a la tabla Museums un nuevo campo denominado 'num_comments'
+		commented_museums = Museums.objects.annotate(num_comments = Count('comments')).order_by('-num_comments')[:5]
+		button = "<a href='//" + MACHINE + ":" + str(PORT) + "/" + "?ACCESIBLES" + "'>" + "<button> Ver mas...</button>" + "</a><br>"
+		if qs == "ACCESIBLES":
+			string = "accesibles."
+			museums2show = Museums.objects.filter(Accessibility = 1)
+			button = "<a href='//" + MACHINE + ":" + str(PORT) + "/" + "?TODOS" + "'>" + "<button> Ver mas...</button>" + "</a><br>"
+		elif qs == "TODOS":
+			# NOTA: Supongo que tras terminar de mostrar todos los museos, no aparecerá ningun botón con enlace.
+			string = "que tenemos actualmente."
+			museums2show = Museums.objects.all()
+			button = None
 
-	if qs == "":
-		qs = "ACCESIBLES"
-		button = "<a href='//" + MACHINE + ":" + str(PORT) + "/" + "?" + qs + "'>" + "MAS" + "</a><br>"
-	elif qs == "ACCESIBLES":
-		# NOTA LOS PRINT SON DE COPROBACION, DEBERIAN IR EN EL HTML
-		qs = "TODOS"
-		access_museums = Museums.objects.filter(Accessibility = 1)
-		print(access_museums)
-		button = "<a href='//" + MACHINE + ":" + str(PORT) + "/" + "?" + qs + "'>" + "MAS" + "</a><br>"
-	elif qs == "TODOS":
-		# NOTA LOS PRINT SON DE COPROBACION, DEBERIAN IR EN EL HTML
-		all_museums = Museums.objects.all()
-		print(all_museums)
-		button = "<a href='//" + MACHINE + ":" + str(PORT) + "/" + "?" + qs + "'>" + "MAS" + "</a><br>"
-	return render_to_response('home.html', {'commented_museums': commented_museums, 'personal_pages': personal_pages, 'button': button})
+		# 2/ Listado con enlaces a las páginas personales
+		# NOTA: He distinguido que un usuario esté registrado, pero no tenga pagina personal (es decir el adjetivo disponible del enunciado)
+		personal_pages = ""
+		pages = User_Page.objects.all()
+		for name in pages:
+			username = name.User
+			title = name.Title
+			if not title:
+				title = "Página de " + username
+			link = "Título: <a href='//" + MACHINE + ":" + str(PORT) + "/" + username + "'>" + title + "</a> Usuario: "
+			personal_pages += link + username + "<br/><br/>"
+		
+		return render_to_response('home.html', {'commented_museums': commented_museums, 'personal_pages': personal_pages, 
+												'str': string, 'button': button, 'museums2show': museums2show})
+	else:
+		response = "Method not allowed"
+		return HttpResponse(response, status = 405)
 
 @csrf_exempt
 def user(request, name):
