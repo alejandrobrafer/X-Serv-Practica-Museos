@@ -1,0 +1,45 @@
+{% extends "index.html" %}
+
+
+<!-- En la página museos en el cuadrado de la izquierda, mostrará algo tipo descripcion, una poesia... -->
+{% block leftpanel %}
+	Aqui ira una poesia sobre los museos
+{% endblock %}
+
+
+<!-- En la pagina museos en el cuadrado del centro, mostrará los museos y el formulario con el filtrado-->
+{% block contenttext %}
+
+<div class="bodytext" style="padding:12px;" align="justify">
+	<center><form method="POST" action="">
+		<select name="Option">
+			<option value="Todos" selected>Todos</option>
+			{% for district in districts %}
+				{% if district == "" %}
+					<option value="">----</option>
+				{% else %}
+					<option value="{{district | safe}}">{{district | safe}}</option>
+				{% endif %}
+			{% endfor %}
+		</select>
+		<input type="submit" value="Filtrar">
+ 	</form></center><br/>
+
+	
+	<table border=”0″ cellpadding=”0″ cellspacing=”0″ align="center">
+		<tr>
+			<th><center>Nombre</center></th>
+			<th><center>Distrito</center></th>
+			<th><center>Página</center></th>
+		<tr>
+		{% for museum in museums %}
+			<tr>
+				<td>{{museum.Name | safe}}</td>
+				<td>{{museum.District | safe}}</td>
+				<td><a href='//localhost:8000/museos/{{museum.id | safe}}'>Ir</a></td>
+
+			</tr>
+		{% endfor %}
+	</table>
+</div>	
+{% endblock %}

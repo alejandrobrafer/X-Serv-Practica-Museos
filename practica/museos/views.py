@@ -11,14 +11,7 @@ from django.db.models import Count
 MACHINE = "localhost"
 PORT = 8000
 
-form = """
-<form action="" method="POST"><input type="text" name="Distrito" value="">
-<input type="submit" value="Enviar"/><input type="reset" value="Reset"></form>
-<br><br>
-"""
-
 def home(request):
-	
 	if request.method == 'GET':
 		# Nota: Abra una parte con el filtrado del XML de Museos de Madrid.
 
@@ -60,68 +53,58 @@ def home(request):
 
 @csrf_exempt
 def user(request, name):
-	# NOTA: FALTA EL ANALISIS DE LOS METODOS
-	# NOTA: QUE PASA SI EL MISMO USUARIO SELECCIONA EL MISMO MUSEO 2 O MAS VECES
-	# POSIBLE SOLUCION:
-	# Obtengo los valores unicos de una lista
-    # http://stackoverflow.com/questions/12897374/get-unique-values-from-a-list-in-python
-	# NOTA: FALTA LA FECHA DE SELECCION
-	try:
-		user = User.objects.get(username = name)
-	except User.DoesNotExist:
-		# NOTA: MEJORAR CON EL USO DE UN TEMPLATES PARA USUARIO NO EXISTENTE
-		return HttpResponseNotFound("USER NOT EXIT.")
+	if request.method == 'GET':	
+		# NOTA: QUE PASA SI EL MISMO USUARIO SELECCIONA EL MISMO MUSEO 2 O MAS VECES <----> Idea en Notas
+		try:
+			user = User.objects.get(username = name)
+		except User.DoesNotExist:
+			# NOTA: MEJORAR CON EL USO DE UN TEMPLATES PARA USUARIO NO EXISTENTE
+			return HttpResponseNotFound("USER NOT EXIT.")
 
-	# Obtención de la Query String
-	# https://docs.djangoproject.com/en/1.8/ref/request-response/
-	qs = request.META['QUERY_STRING']
-	if qs == "":
-		qs = 0
-		# 1 usuario = 1 museo seleccionado --> museo = usuario
-		# Lo que muestro son los 5 primeros 
-		# luego en un for nada mas que saco el museum.Museums.Name
+		# Obtención de la Query String
+		# https://docs.djangoproject.com/en/1.8/ref/request-response/
+		qs = request.META['QUERY_STRING']
+		if qs == "":
+			qs = 0
+			# 1 usuario = 1 museo seleccionado --> museo = usuario
+			museums = Selected.objects.filter(User = user).order_by('-User')[qs:((qs + 1) * 5)]
+		else:
+			qs = int(qs)
+			museums = Selected.objects.filter(User = user)[(qs * 5):((qs + 1) * 5)]
 
-		# NOTA LOS PRINT SON DE COPROBACION, DEBERIAN IR EN EL HTML
-		print("Mostrados los primeros 5 museos")
-		museums = Selected.objects.filter(User = user)[qs:((qs + 1) * 5)]
-		print(museums)
+		#¿Necesito mostrar más?
+		more_museums = Selected.objects.filter(User = user)[((qs + 1) * 5):]
+		button = None 
+		if len(more_museums) > 0:
+			qs += 1
+			button = "<a href='//" + MACHINE + ":" + str(PORT) + "/" + name + "?" + str(qs) + "'>" + "<button> Ver mas...</button>" + "</a><br>"
+
+		return render_to_response('user.html', {'museums': museums, 'name': name, 'button': button})
 	else:
-		print("Mostrados los sigueintes museos")
-		qs = int(qs)
-		museums = Selected.objects.filter(User = user)[(qs * 5):((qs + 1) * 5)]
-		print(museums)
-
-	#¿necesito mostrar el enlace MAS
-	more_museums = Selected.objects.filter(User = user)[((qs + 1) * 5):]
-	more = ""
-	if len(more_museums) > 0:
-		qs += 1
-		more = "<a href='//" + MACHINE + ":" + str(PORT) + "/" + name + "?" + str(qs) + "'>" + "MAS" + "</a><br>"
-
-	return HttpResponse(more)
+		response = "Method not allowed"
+		return HttpResponse(response, status = 405)
 
 @csrf_exempt
 def museums(request):
-	# NOTA: EL FILATRADO DE LOS DISTRITOS ES A TRAVES DE UN DESPLEGABLE
-	# NOTA: HE AÑADIDO EL ENLACE AL MUSEO EN EL PROPIO NOMBRE DEL MISMO
-	# El formulario en un templete.
-	# Añadir CSS
-	
+	# NOTA: supongo que aqui es donde se añadiran los museos a un usuario registrado
+
+	# Es necesario sacar una lista de los distritos para pasarlo al formulario
+	# Con el list(set()) lo que obtengo es los valores no repetidos de una lista
+	# value_list: https://docs.djangoproject.com/en/2.0/ref/models/querysets/
+	districts = list(set(Museums.objects.all().values_list('District')))
+	# https://stackoverflow.com/questions/10941229/convert-list-of-tuples-to-list
+	districts = [districts[0] for districts in districts]
+
 	if request.method == 'GET':
 		museums = Museums.objects.all()
-		response = "<ul>"
-		for museum in museums:
-			response += "<a href='//" + MACHINE + ":" + str(PORT) + "/museos/" + str(museum.id) + "'>" + museum.Name + "</a><br>"
-		response += "</ul>"
-		return HttpResponse("museos" + form + response) 
+		return render_to_response('museums.html', {'museums': museums, 'districts': districts}) 
 	elif request.method == 'POST':
-		dm = request.POST['Distrito']
-		district_museums = Museums.objects.filter(District = dm)
-		response = "<ul>"
-		for district_museum in district_museums:
-			response += district_museum.Name + "<br>"
-		response += "</ul>"
-		return HttpResponse("museos " + response)
+		dm = request.POST['Option']
+		if dm == "Todos":
+			museums = Museums.objects.all()
+		else:
+			museums = Museums.objects.filter(District = dm)
+		return render_to_response('museums.html', {'museums': museums, 'districts': districts})  
 	else:
 		response = "Method not allowed"
 		return HttpResponse(response, status = 405)
