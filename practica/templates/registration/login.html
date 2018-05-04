@@ -1,0 +1,17 @@
+{% extends "index.html" %}
+<p class="welcome">Welcome, Guest. Please login or <a href="#">register</a>.</p>
+
+{% csrf_token %}
+{% block toplinks %}					
+<form id="form1" method="post" action="/login">
+<table>
+  <tr><td>Username</td>
+      <td>{{ form.username }}</td></tr>
+  <tr><td>Password</td>
+      <td>{{ form.password }}</td></tr>
+</table>
+
+</form>
+{% endblock %}
+
+

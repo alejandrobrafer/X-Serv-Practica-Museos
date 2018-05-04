@@ -1,0 +1,30 @@
+{% extends "index.html" %}
+
+
+<!-- En la pagina principal en el cuadrado de la izquierda, mostrará el listado con las paginas personales-->
+{% block leftpanel %}
+	<center><span class="smalltitle">Paginas personales</span></center><br/><br/>
+	{{ personal_pages |safe}}
+{% endblock %}
+
+
+<!-- En la pagina principal en el cuadrado del centro, mostrará el listado con los museos comentados-->
+{% block contenttext %}
+<div> <style="padding:10px">
+	<span class="titletext">Bienvenid@!</span>
+</div>
+
+<div class="bodytext" style="padding:12px;" align="justify">
+	<strong>Gracias por aparecer en la página de museos de la asignatura de Servicios y Aplicaciones en Redes de Ordenadores.<br/>
+	En la parte inferior, se muestra un listado con los museos más comentados actualmente:</strong><br/><br/>
+
+	{% for commented_museum in commented_museums %}
+		{% if commented_museum.num_comments > 0%}
+		<ul><a href='{{commented_museum.URL}}'>{{commented_museum.Name}}</a>  {{commented_museum.Street_Name}}  
+			<a href='//localhost:8000/museos/{{commented_museum.id}}'>Más informacion</a><br/></ul>
+		{% endif %}
+	{% endfor %}
+	
+	{{button | safe}}		
+</div>	
+{% endblock %}

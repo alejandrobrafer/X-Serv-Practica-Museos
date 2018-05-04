@@ -24,25 +24,25 @@ def home(request):
 	# Listado de los 5 museos con mas comentario
 	# Con el annotate(num_comments) es como si añadieramos a la tabla Museums un nuevo campo denominado numero de comentarios
 	commented_museums = Museums.objects.annotate(num_comments = Count('comments')).order_by('-num_comments')[:5]
-	response = ""
-	for commented_museum in commented_museums:
+	#response = ""
+	#for commented_museum in commented_museums:
 		# NOTA: ME SALTA EL PROBLEMA DE QUE SIEMPRE SALEN 5 AUN NO HABIENDO COMENTARIO
 		# SOLUCION:
-		if commented_museum.num_comments > 0:
-			response += commented_museum.Name + "<br/>"
+	#	if commented_museum.num_comments > 0:
+	#		response += commented_museum.Name + "<br/>"
 		# NOTA: FALTA POR MOSTRAR MÁS APECTOS DE  LOS MUSEOS COMENTADOS, PERO LO HARE EN EL HTML.
 	
 	# Listado con enlaces a las paginas personales
-	response1 = ""
+	personal_pages = ""
 	pages = User_Page.objects.all()
 	for name in pages:
 		username = name.User
 		title = name.Title
 		if not title:
 			title = "Página de " + username
-		link = "<a href='//" + MACHINE + ":" + str(PORT) + "/" + username + "'>" + title + "</a><br>"
+		link = "Título: <a href='//" + MACHINE + ":" + str(PORT) + "/" + username + "'>" + title + "</a> Usuario: "
 		show = link + username
-		response1 += show + "<br/>"
+		personal_pages += show + "<br/>"
 
 	# Boton
 	# Obtención de la Query String
@@ -63,7 +63,7 @@ def home(request):
 		all_museums = Museums.objects.all()
 		print(all_museums)
 		button = "<a href='//" + MACHINE + ":" + str(PORT) + "/" + "?" + qs + "'>" + "MAS" + "</a><br>"
-	return HttpResponse(response + response1 + button)
+	return render_to_response('home.html', {'commented_museums': commented_museums, 'personal_pages': personal_pages, 'button': button})
 
 @csrf_exempt
 def user(request, name):

@@ -1,0 +1,67 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+	<meta name="author" content="Wink Hosting (www.winkhosting.com)" />
+	<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
+	<link rel="stylesheet" href="static/style.css" type="text/css" />
+	<title>Museos | SARO 2018</title>
+</head>
+<body>
+	<div id="page" align="center">
+		<div id="content" style="width:800px">
+			<div id="logo">
+				<div style="margin-top:70px" class="whitetitle">SARO|2018</div>
+			</div>
+			<div id="topheader">
+				<div align="left" class="bodytext">
+					<br />
+					<strong>Your Company Name</strong><br />
+					Evergreen Terrace 742<br />
+					Kansas Missouri<br />
+					Phone: 432-653-3121<br />
+					sales@thetiecompany.com
+				</div>
+				<div id="toplinks" class="smallgraytext">
+					 <p class="welcome">Welcome, Guest. Please login or <a href="#">register</a>.</p>
+					 <form id="form1" method="post" action="">
+    					<p><label>Username
+    					<input type="text" class="fields" name="textfield" />
+   						</label>
+   						<label>Password
+   						<input type="text" class="fields" name="textfield2" />
+   						<input type="submit" class="submit_button" name="Submit" value="login" />
+   						</label></p>
+ 					 </form>
+				</div>
+			</div>
+			<div id="menu">
+				<div align="right" class="smallwhitetext" style="padding:9px;">
+					<a href="#">Home</a> | <a href="#">About Us</a> | <a href="#">Products</a> | <a href="#">Our Services</a> | <a href="#">Contact Us</a>
+				</div>
+			</div>
+			<div id="submenu">
+				<div align="right" class="smallgraytext" style="padding:9px;">
+					<a href="#">Submenu 1</a> | <a href="#">Submenu 2</a> | <a href="#">Submenu 3</a> | <a href="#">Submenu 4</a> | <a href="#">Submenu 5</a> | <a href="#">Submenu 6</a>
+				</div>
+			</div>
+
+			<!---Parte del centro-->
+			<div id="contenttext">
+				{% block contenttext %}{% endblock %}
+			</div>
+
+			<!---Parte de la izquierda-->
+			<div id="leftpanel"> 
+				<div align="justify" class="graypanel">
+					{% block leftpanel %}{% endblock %}
+				</div>
+			</div>
+
+			<!---Pie de nota-->
+			<div id="footer" class="smallgraytext">
+				Esta aplicacion utiliza datos del portal de datos abiertos de la ciudad de Madrid | <a href="https://datos.madrid.es/portal/site/egob/menuitem.c05c1f754a33a9fbe4b2e4b284f1a5a0/?vgnextoid=118f2fdbecc63410VgnVCM1000000b205a0aRCRD&vgnextchannel=374512b9ace9f310VgnVCM100000171f5a0aRCRD&vgnextfmt=default">Descripcion de los datos</a> | <a href="https://datos.madrid.es/portal/site/egob/menuitem.ac61933d6ee3c31cae77ae7784f1a5a0/?vgnextoid=00149033f2201410VgnVCM100000171f5a0aRCRD&format=xml&file=0&filename=201132-0-museos&mgmtid=118f2fdbecc63410VgnVCM1000000b205a0aRCRD&preview=full">Pagina con los datos</a>
+			</div>
+		</div>
+	</div>
+</body>
+</html>
