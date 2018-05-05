@@ -8,8 +8,6 @@ from django.contrib.auth.models import User
 # https://docs.djangoproject.com/en/2.0/topics/db/aggregation/ --> Para mostrar los museos con mas comentarios
 from django.db.models import Count
 
-MACHINE = "localhost"
-PORT = 8000
 
 def home(request):
 	if request.method == 'GET':
@@ -22,11 +20,11 @@ def home(request):
 		# 1/ Listado de los 5 museos con más comentario: https://docs.djangoproject.com/en/2.0/topics/db/aggregation/
 		# Con el annotate(num_comments) es como si añadieramos a la tabla Museums un nuevo campo denominado 'num_comments'
 		commented_museums = Museums.objects.annotate(num_comments = Count('comments')).order_by('-num_comments')[:5]
-		button = "<a href='//" + MACHINE + ":" + str(PORT) + "/" + "?ACCESIBLES" + "'>" + "<button> Ver mas...</button>" + "</a><br>"
+		button = "<a href='/?ACCESIBLES'>" + "<button> Ver más...</button>" + "</a><br>"
 		if qs == "ACCESIBLES":
 			string = "accesibles."
 			museums2show = Museums.objects.filter(Accessibility = 1)
-			button = "<a href='//" + MACHINE + ":" + str(PORT) + "/" + "?TODOS" + "'>" + "<button> Ver mas...</button>" + "</a><br>"
+			button = "<a href='/?TODOS'>" + "<button> Ver más...</button>" + "</a><br>"
 		elif qs == "TODOS":
 			# NOTA: Supongo que tras terminar de mostrar todos los museos, no aparecerá ningun botón con enlace.
 			string = "que tenemos actualmente."
@@ -42,8 +40,7 @@ def home(request):
 			title = name.Title
 			if not title:
 				title = "Página de " + username
-			link = "Título: <a href='//" + MACHINE + ":" + str(PORT) + "/" + username + "'>" + title + "</a> Usuario: "
-			personal_pages += link + username + "<br/><br/>"
+			personal_pages += "Título: <a href='/" + username + "'>" + title + "</a> Usuario: " + username + "<br/><br/>"
 		
 		return render_to_response('home.html', {'commented_museums': commented_museums, 'personal_pages': personal_pages, 
 												'str': string, 'button': button, 'museums2show': museums2show})
@@ -77,7 +74,7 @@ def user(request, name):
 		button = None 
 		if len(more_museums) > 0:
 			qs += 1
-			button = "<a href='//" + MACHINE + ":" + str(PORT) + "/" + name + "?" + str(qs) + "'>" + "<button> Ver mas...</button>" + "</a><br>"
+			button = "<a href='/" + name + "?" + str(qs) + "'>" + "<button> Ver más...</button>" + "</a><br>"
 
 		return render_to_response('user.html', {'museums': museums, 'name': name, 'button': button})
 	else:

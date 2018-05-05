@@ -1,6 +1,11 @@
 {% extends "index.html" %}
 
 
+{% block menu %}
+	<a href="/">Inicio</a> | <a href="/about">About</a> | <a href="/museos">Todos</a>
+{% endblock %}
+
+
 <!-- En la página museos en el cuadrado de la izquierda, mostrará algo tipo descripcion, una poesia... -->
 {% block leftpanel %}
 	Aqui ira una poesia sobre los museos
@@ -36,7 +41,7 @@
 			<tr>
 				<td>{{museum.Name | safe}}</td>
 				<td>{{museum.District | safe}}</td>
-				<td><a href='//localhost:8000/museos/{{museum.id | safe}}'>Ir</a></td>
+				<td><a href='/museos/{{museum.id | safe}}'>Ir</a></td>
 			</tr>
 		{% endfor %}
 	</table>

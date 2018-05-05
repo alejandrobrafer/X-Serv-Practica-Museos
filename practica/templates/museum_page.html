@@ -1,6 +1,11 @@
 {% extends "index.html" %}
 
 
+{% block menu %}
+	<a href="/">Inicio</a> | <a href="/about">About</a> | <a href="/museos">Todos</a>
+{% endblock %}
+
+
 <!-- En la página museos con identificador en el cuadrado de la izquierda, mostrará los comentarios -->
 {% block leftpanel %}
 	<center><span class="smalltitle">Comentarios</span></center><br/><br/>

@@ -1,9 +1,14 @@
 {% extends "index.html" %}
 
 
+{% block menu %}
+	<a href="/">Inicio</a> | <a href="/about">About</a> | <a href="/museos">Todos</a>
+{% endblock %}
+
+
 <!-- En la página personal del usuario en el cuadrado de la izquierda, mostrará el formulario de la parte privada-->
 {% block leftpanel %}
-
+	Formulario de la parte privada
 {% endblock %}
 
 
@@ -25,7 +30,7 @@
 				<th><a href='{{museum.Museum.URL | safe}}' target="_blank">{{museum.Museum.Name | safe}}</a></th>
 				<td>{{museum.Museum.Street_Type | safe}} {{museum.Museum.Street_Name | safe}} {{museum.Museum.Street_Num | safe}}</td>
 				<td>{{museum.Date | safe}}</td>
-				<td><a href='//localhost:8000/museos/{{museum.Museum.id | safe}}'>Más información</a></td>
+				<td><a href='/museos/{{museum.Museum.id | safe}}'>Más información</a></td>
 			</tr>
 		{% endfor %}
 	</table>

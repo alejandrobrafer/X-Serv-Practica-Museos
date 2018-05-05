@@ -1,6 +1,11 @@
 {% extends "index.html" %}
 
 
+{% block menu %}
+	<a href="/about">About</a> | <a href="/museos">Todos</a>
+{% endblock %}
+
+
 <!-- En la página principal en el cuadrado de la izquierda, mostrará el listado con las páginas personales disponibles-->
 {% block leftpanel %}
 	<center><span class="smalltitle">Páginas personales</span></center><br/><br/>
@@ -30,7 +35,7 @@
 					<th><a href='{{commented_museum.URL | safe}}' target="_blank">{{commented_museum.Name | safe}}</a></th>
 					<td>{{commented_museum.Street_Type | safe}} {{commented_museum.Street_Name | safe}} {{commented_museum.Street_Num | safe}} 
 						{{commented_museum.Postal_Code| safe}} {{commented_museum.Province| safe}} </td>
-					<td><a href='//localhost:8000/museos/{{commented_museum.id | safe}}'>Más información</a></td>
+					<td><a href='/museos/{{commented_museum.id | safe}}'>Más información</a></td>
 				</tr>
 			{% endif %}
 		{% endfor %}
@@ -40,7 +45,7 @@
 	{% if museums2show %}
 		<br/><br/><strong>No paramos y a continuación os pasamos más información de los museos {{str | safe}}</strong><br/><br/>
 		{% for museum2show in museums2show %}
-			<ul><li><a href='//localhost:8000/museos/{{museum2show.id | safe}}'> {{museum2show.Name | safe}}</a></ul>
+			<ul><li><a href='/museos/{{museum2show.id | safe}}'> {{museum2show.Name | safe}}</a></ul>
 		{% endfor %}
 	{% endif %}
 	

@@ -12,17 +12,11 @@
 	<div id="page" align="center">
 		<div id="content" style="width:800px">
 			<div id="logo">
-				<div style="margin-top:70px" class="whitetitle">SARO|2018</div>
+				<div style="margin-top:70px" class="whitetitle">SARO 2018</div>
 			</div>
+			
+			<!---Parte de la cabecera-->
 			<div id="topheader">
-				<div align="left" class="bodytext">
-					<br />
-					<strong>Your Company Name</strong><br />
-					Evergreen Terrace 742<br />
-					Kansas Missouri<br />
-					Phone: 432-653-3121<br />
-					sales@thetiecompany.com
-				</div>
 				<div id="toplinks" class="smallgraytext">
 					 <p class="welcome">Welcome, Guest. Please login or <a href="#">register</a>.</p>
 					 <form id="form1" method="post" action="">
@@ -36,15 +30,16 @@
  					 </form>
 				</div>
 			</div>
+			
+			<!---Parte del menu-->
 			<div id="menu">
-				<div align="right" class="smallwhitetext" style="padding:9px;">
-					<a href="#">Home</a> | <a href="#">About Us</a> | <a href="#">Products</a> | <a href="#">Our Services</a> | <a href="#">Contact Us</a>
+				<div align="center" class="smallwhitetext" style="padding:9px;">
+					{% block menu %}{% endblock %}
 				</div>
 			</div>
+			<!---Parte del submenu, que la tengo para la imagen de debajo del menu-->
 			<div id="submenu">
-				<div align="right" class="smallgraytext" style="padding:9px;">
-					<a href="#">Submenu 1</a> | <a href="#">Submenu 2</a> | <a href="#">Submenu 3</a> | <a href="#">Submenu 4</a> | <a href="#">Submenu 5</a> | <a href="#">Submenu 6</a>
-				</div>
+				<div align="right" class="smallgraytext" style="padding:9px;"></div>
 			</div>
 
 			<!---Parte del centro-->

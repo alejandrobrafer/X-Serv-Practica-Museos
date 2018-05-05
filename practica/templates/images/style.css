@@ -8,13 +8,13 @@ body {
 	margin-bottom: 0px;
 }
 #logo{float:left; background-image:url(museum_logo_pczohtas-01.png); width:240px; height:154px;}
-#topheader{float:right; width:526px; height:150px; background-color:#F0F0F0; position:relative}
+#topheader{float:right; width:269px; height:150px; background-color:#F0F0F0; position:relative}
 #toplinks{position:absolute; right:10px; top:10px;}
-#menu{float:right; width:526px; height:32px; background-image:url(bg_menu.gif); background-repeat:repeat-x;}
-#submenu{float:right; width:526px; height:32px; background-image:url(bg_submenu.gif); background-position:top; background-repeat:repeat-x;}
+#menu{float:right; width:796px; height:32px; background-image:url(bg_menu.gif); background-repeat:repeat-x;}
+#submenu{float:right; width:796px; height:32px; background-image:url(bg_submenu.gif); background-position:top; background-repeat:repeat-x;}
 #contenttext{float:right; width:526px;}
 #leftpanel{float:left; width:274px;}
-#footer{float:left; width:800px; background-color:#F0F0F0; padding:10px;}
+#footer{float:left; width:796px; background-color:#F0F0F0; padding:10px;}
 
 /*GRAY PANEL*/
 .graypanel{
@@ -22,35 +22,44 @@ body {
 }
 
 /*TEXT STYLES*/
+/* Estilo del cuerpo en general */
 .bodytext {
-	font: 0.7em Tahoma, sans-serif;
+	font: 0.7em Verdana, sans-serif;
 	color: #666666;
 }
 
+/* Estilo del titulo de HOME y de los MUSEOS */
 .titletext {
-	font: 0.7em Tahoma, sans-serif;
+	font: 0.7em Arial Black, sans-serif;
 	font-size:36px;
 	font-weight:bold;
 	color:#D35400;
 }
+
+/* Estilo del banner */
 .whitetitle {
-	font: 0.7em Tahoma, sans-serif;
-	font-size:36px;
+	font: 0.7em Arial Black, sans-serif;
+	font-size:28px;
 	font-weight:bold;
 	color:#FFFFFF;
 }
+
+/* Estilo del titulo del cuadro de la izquierda */
 .smalltitle {
-	font: 0.7em Tahoma, sans-serif;
+	font: 0.7em Comic Sans MS, sans-serif;
 	font-size:20px;
 	font-weight:bold;
 	color:#F39C12;
 }
+
+/* Estilo del las letras del menu */
 .smallwhitetext {
 	font: 0.7em Tahoma, sans-serif;
 	font-size: 11px;
 	font-weight:bold;
 	color: #FFFFFF;
 }
+
 .smallwhitetext a{
 	font: 0.7em Tahoma, sans-serif;
 	font-size: 11px;
@@ -75,22 +84,6 @@ body {
 	text-decoration:none;
 }
 .smallgraytext a:hover{
-	text-decoration:underline;
-}
-.smallredtext {
-	font: 0.7em Tahoma, sans-serif;
-	font-size: 11px;
-	font-weight:bold;
-	color:#CC0000;
-}
-.smallredtext a{
-	font: 0.7em Tahoma, sans-serif;
-	font-size: 11px;
-	font-weight:bold;
-	color:#CC0000;
-	text-decoration:none;
-}
-.smallredtext a:hover{
 	text-decoration:underline;
 }
 
