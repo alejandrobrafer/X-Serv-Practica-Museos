@@ -1,17 +1,22 @@
 # Create your views here.
 
-from django.shortcuts import render_to_response
-from django.http import HttpResponse, HttpResponseNotFound
+from django.shortcuts import render_to_response, render
+from django.http import HttpResponse, HttpResponseNotFound, HttpResponseRedirect
 from django.views.decorators.csrf import csrf_exempt
 from museos.models import Museums, Selected, Comments, User_Page
 from django.contrib.auth.models import User
 # https://docs.djangoproject.com/en/2.0/topics/db/aggregation/ --> Para mostrar los museos con mas comentarios
 from django.db.models import Count
+from django.contrib import auth
 
 
+@csrf_exempt
 def home(request):
-	if request.method == 'GET':
+	if request.method == 'GET' or request.method == 'POST':
 		# Nota: Abra una parte con el filtrado del XML de Museos de Madrid.
+
+#		if request.user.is_authenticated():
+#			print(request.user.username)
 
 		museums2show = None
 		string = ""
@@ -140,3 +145,21 @@ def xml_user(request, name):
 def about(request):
 	#NOTA: Falta por hacer
 	return HttpResponse("About")
+
+@csrf_exempt
+# http://librosweb.es/libro/django_1_0/capitulo_12/utilizando_usuarios.html --> parte opcional de registro tambien
+def login(request):
+	print(request)
+	if request.method == 'POST':
+		username = request.POST['username']
+		print(username)
+		password = request.POST['password']
+		print(password)
+		user = auth.authenticate(username = username, password = password)
+		if user is not None and user.is_active:
+			auth.login(request, user)
+			print("Correct")
+			return HttpResponseRedirect("/")
+	else:
+		response = "Method not allowed"
+		return HttpResponse(response, status = 405)

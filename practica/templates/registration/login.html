@@ -1,17 +1,12 @@
-{% extends "index.html" %}
-<p class="welcome">Welcome, Guest. Please login or <a href="#">register</a>.</p>
-
+<html><body>
+<form method="POST" action="/">
 {% csrf_token %}
-{% block toplinks %}					
-<form id="form1" method="post" action="/login">
 <table>
-  <tr><td>Username</td>
+  <tr><td>Usuario</td>
       <td>{{ form.username }}</td></tr>
-  <tr><td>Password</td>
+  <tr><td>Contraseña</td>
       <td>{{ form.password }}</td></tr>
 </table>
-
+<input type="submit" value="Login" />
 </form>
-{% endblock %}
-
-
+</body></html>

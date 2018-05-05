@@ -16,9 +16,13 @@ from django.conf.urls import include, url
 from django.contrib import admin
 from django.views.static import *
 from practica import settings
+from django.contrib.auth.views import logout, login
+from django.views.generic import RedirectView
 
 urlpatterns = [
-   
+    url(r'^logout', logout),
+    url(r'^login', 'museos.views.login', name = "Entrada de usuarios."),
+    #url(r'^accounts/profile/', RedirectView.as_view(url = '/', permanent = True)),
     url(r'^admin/', include(admin.site.urls)),
  	url(r'^about$', 'museos.views.about', name = "Pagina para mas informacion."),
 	url(r'^museos/(\d+)$', 'museos.views.museum_page', name = "Pagina del museo."),

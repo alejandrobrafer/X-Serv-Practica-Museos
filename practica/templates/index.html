@@ -8,6 +8,7 @@
 	<title>Museos | SARO 2018</title>
 </head>
 
+
 <body>
 	<div id="page" align="center">
 		<div id="content" style="width:800px">
@@ -18,16 +19,21 @@
 			<!---Parte de la cabecera-->
 			<div id="topheader">
 				<div id="toplinks" class="smallgraytext">
-					 <p class="welcome">Welcome, Guest. Please login or <a href="#">register</a>.</p>
-					 <form id="form1" method="post" action="">
-    					<p><label>Usuario
-    					<input type="text" class="fields" name="textfield" />
-   						</label>
-   						<label>Contraseña
-   						<input type="text" class="fields" name="textfield2" />
-   						<input type="submit" class="submit_button" name="Submit" value="Entrar" />
-   						</label></p>
- 					 </form>
+					{% if user.is_authenticated %}
+						 <p>Bienvenid@, {{user.username | safe}}!</p>
+					{% else %}
+						<p class="welcome">Welcome, Guest. Please login or <a href="#">register</a>.</p>
+						<form method="POST" action="/login">
+							{% csrf_token %}
+	    					<p><label>Usuario
+	    					<input type="username" class="fields" name='username' />
+	   						</label>
+	   						<label>Contraseña
+	   						<input type="password" class="fields" name='password' />
+	   						<input type="submit" class="submit_button" name="Submit" value="Entrar" />
+	   						</label></p>
+	 					 </form>
+	 				{% endif %}
 				</div>
 			</div>
 			
