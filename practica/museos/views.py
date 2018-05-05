@@ -111,20 +111,18 @@ def museums(request):
 
 
 def museum_page(request, id):
-	# NOTA: FALTA POR MOSTRAR LOS DATOS DEL MUSEO QUE LO HARE EN EL HTML PASANDO LA LISTA ENTERA
-	# NOTA: FALTA EL ANALIIS DE LOS METODOS.
-	try:
-		museum = Museums.objects.get(id = id)
-		comments = Comments.objects.filter(Museum = museum)
-		response = "<ul>"
-		for commentary in comments:
-			response += commentary.Commentary + "<br>"
-		response += "</ul>"
+	if request.method == 'GET':
+		try:
+			museum = Museums.objects.get(id = id)
+			comments = Comments.objects.filter(Museum = museum)
+			return render_to_response('museum_page.html', {'museum': museum, 'comments': comments})  
+		except Museums.DoesNotExist:
+			response = "Page not found"
+			return HttpResponseNotFound(response)
+	else:
+		response = "Method not allowed"
+		return HttpResponse(response, status = 405)
 
-		return HttpResponse(museum.Name + response)
-	except Museums.DoesNotExist:
-		response = "Page not found"
-		return HttpResponseNotFound(response)
 
 def xml_user(request, name):
 	if request.method == 'GET':

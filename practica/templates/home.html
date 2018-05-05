@@ -28,7 +28,8 @@
 			{% if commented_museum.num_comments > 0 %}
 				<tr>
 					<th><a href='{{commented_museum.URL | safe}}' target="_blank">{{commented_museum.Name | safe}}</a></th>
-					<td>{{commented_museum.Street_Type | safe}} {{commented_museum.Street_Name | safe}} {{commented_museum.Street_Num | safe}}</td>
+					<td>{{commented_museum.Street_Type | safe}} {{commented_museum.Street_Name | safe}} {{commented_museum.Street_Num | safe}} 
+						{{commented_museum.Postal_Code| safe}} {{commented_museum.Province| safe}} </td>
 					<td><a href='//localhost:8000/museos/{{commented_museum.id | safe}}'>Más información</a></td>
 				</tr>
 			{% endif %}

@@ -1,0 +1,39 @@
+{% extends "index.html" %}
+
+
+<!-- En la página museos con identificador en el cuadrado de la izquierda, mostrará los comentarios -->
+{% block leftpanel %}
+	<center><span class="smalltitle">Comentarios</span></center><br/><br/>
+	{% for comment in comments %}
+		<center><li>{{comment.Commentary | safe}}</center><br/>
+	{% endfor %}
+{% endblock %}
+
+
+<!-- En la pagina museos en el cuadrado del centro, mostrará los museos y el formulario con el filtrado-->
+{% block contenttext %}
+<div> <style="padding:10px">
+	<span class="titletext">{{museum.Name | safe}}</span>
+</div>
+
+<div class="bodytext" style="padding:12px;" align="justify">
+	{{museum.Description | safe}}<br/><br/>
+	<b>Horario</b><br/>
+	{{museum.Schedule | safe}}<br/><br/>
+	<b>Datos de localización y contacto</b><br/>
+	<u>Dirección</u> {{museum.Street_Type | safe}} {{museum.Street_Name | safe}} {{museum.Street_Num | safe}} 
+	{{museum.Postal_Code| safe}} {{museum.Province| safe}}<br/>
+	<u>Barrio/Distrito</u> {{museum.Neighborhood | safe}}  / {{museum.District | safe}}<br/>
+	<u>Teléfono</u> {{museum.Phone | safe}} <br/>
+	<u>Correo</u> {{museum.Email | safe}} <br/>
+	<u>Web</u><a href='{{museum.URL | safe}}' target="_blank">  Portal esmadrid</a> <br/></br>
+	<b>Cómo llegar</b><br/>
+	{{museum.Transport | safe}}<br/><br/>
+	<b>Accesibilidad</b><br/>
+	{% if museum.Accessibility == 1 %}
+		El museo es <b>ACCESIBLE</b>
+	{% else %}
+		El museo es <b>NO ACCESIBLE</b>
+	{% endif %}
+</div>	
+{% endblock %}
