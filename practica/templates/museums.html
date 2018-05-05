@@ -14,6 +14,9 @@
 
 <!-- En la pagina museos en el cuadrado del centro, mostrará los museos y el formulario con el filtrado-->
 {% block contenttext %}
+<div> <style="padding:10px">
+	<span class="titletext">Museos</span>
+</style></div>
 
 <div class="bodytext" style="padding:12px;" align="justify">
 	<center><form method="POST" action="">
@@ -31,17 +34,17 @@
  	</form></center><br/>
 
 	
-	<table border=”0″ cellpadding=”0″ cellspacing=”0″ align="center">
-		<tr>
+	<table border=”0″ cellpadding=”1″ cellspacing="2" align="center" bordercolor="#F39C12">
+		<tr bgcolor= "#F39C12" >
 			<th><center>Nombre</center></th>
 			<th><center>Distrito</center></th>
 			<th><center>Página</center></th>
 		<tr>
 		{% for museum in museums %}
 			<tr>
-				<td>{{museum.Name | safe}}</td>
-				<td>{{museum.District | safe}}</td>
-				<td><a href='/museos/{{museum.id | safe}}'>Ir</a></td>
+				<td nowrap>{{museum.Name | safe}}</td>
+				<td nowrap>{{museum.District | safe}}</td>
+				<td nowrap><a href='/museos/{{museum.id | safe}}'>Ir</a></td>
 			</tr>
 		{% endfor %}
 	</table>

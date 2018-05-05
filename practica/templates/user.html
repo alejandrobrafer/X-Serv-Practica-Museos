@@ -13,13 +13,17 @@
 
 
 <!-- En la pagina principal en el cuadrado del centro, mostrará el listado con los museos comentados-->
+<!-- NOTA: AQUI MEJOR EL TITULO DE LA PAGINA -->
 {% block contenttext %}
+<div> <style="padding:10px">
+	<span class="titletext">{{name | safe}}</span>
+</style></div>
 
 <div class="bodytext" style="padding:12px;" align="justify">
 	<strong>Estos son los museos seleccionados por {{name | safe}}:</strong><br/><br/>
 	
-	<table border=”0″ cellpadding=”0″ cellspacing=”0″ align="center">
-		<tr>
+	<table border=”0″ cellpadding=”1″ cellspacing="2" align="center" bordercolor="#F39C12">
+		<tr bgcolor= "#F39C12" >
 			<th><center>Nombre</center></th>
 			<th><center>Dirección</center></th>
 			<th><center>Fecha de la selección</center></th>
@@ -27,9 +31,9 @@
 		<tr>
 		{% for museum in museums %}
 			<tr>
-				<th><a href='{{museum.Museum.URL | safe}}' target="_blank">{{museum.Museum.Name | safe}}</a></th>
+				<td nowrap><a href='{{museum.Museum.URL | safe}}' target="_blank">{{museum.Museum.Name | safe}}</a></td>
 				<td>{{museum.Museum.Street_Type | safe}} {{museum.Museum.Street_Name | safe}} {{museum.Museum.Street_Num | safe}}</td>
-				<td>{{museum.Date | safe}}</td>
+				<td nowrap>{{museum.Date | safe}}</td>
 				<td><a href='/museos/{{museum.Museum.id | safe}}'>Más información</a></td>
 			</tr>
 		{% endfor %}

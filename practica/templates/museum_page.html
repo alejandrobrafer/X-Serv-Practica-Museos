@@ -19,7 +19,7 @@
 {% block contenttext %}
 <div> <style="padding:10px">
 	<span class="titletext">{{museum.Name | safe}}</span>
-</div>
+</style></div>
 
 <div class="bodytext" style="padding:12px;" align="justify">
 	{{museum.Description | safe}}<br/><br/>
@@ -40,5 +40,5 @@
 	{% else %}
 		El museo es <b>NO ACCESIBLE</b>
 	{% endif %}
-</div>	
+</div>
 {% endblock %}
