@@ -1,21 +1,29 @@
 {% extends "index.html" %}
 
-
+<!-- Menú identificativo de las páginas a excepción de la de inicio. -->
 {% block menu %}
 	<a href="/">Inicio</a> | <a href="/about">About</a> | <a href="/museos">Todos</a>
 {% endblock %}
 
 
-<!-- En la página museos con identificador en el cuadrado de la izquierda, mostrará los comentarios -->
+<!-- En la página museos con identificador en el cuadrado de la izquierda, mostrará los comentarios y formulario de añadir en modo 'privado'-->
 {% block leftpanel %}
-	<center><span class="smalltitle">Comentarios</span></center><br/><br/>
+	<center><span class="smalltitle"><u>Comentarios</u></span></center><br/><br/>
 	{% for comment in comments %}
-		<center><li>{{comment.Commentary | safe}}</center><br/>
+		<center><font face="courier new" color= #626567 size=2>"{{comment.Commentary | safe}}"</font></center><br/>
 	{% endfor %}
+
+	{% if user.is_authenticated %}
+		<form method="POST" action="">
+	    	<textarea name="comment" rows="10" cols="20" placeholder="Escribe aquí tus comentarios"></textarea>
+	    	<input type="submit" name="Submit" value="Enviar" />
+	  		<br/>
+	 	</form>
+	{% endif %}
 {% endblock %}
 
 
-<!-- En la pagina museos en el cuadrado del centro, mostrará los museos y el formulario con el filtrado-->
+<!-- En la página museos con identificador en el cuadrado del centro, mostrará la información detallada del museo -->
 {% block contenttext %}
 <div> <style="padding:10px">
 	<span class="titletext">{{museum.Name | safe}}</span>

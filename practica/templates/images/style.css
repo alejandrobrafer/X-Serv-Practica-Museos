@@ -28,7 +28,7 @@ body {
 	color: #666666;
 }
 
-/* Estilo del titulo de HOME y de los MUSEOS */
+/* Estilo del titulo*/
 .titletext {
 	font: 0.7em Arial Black, sans-serif;
 	font-size:36px;
@@ -68,22 +68,6 @@ body {
 	text-decoration:none;
 }
 .smallwhitetext a:hover{
-	text-decoration:underline;
-}
-.smallgraytext {
-	font: 0.7em Tahoma, sans-serif;
-	font-size: 11px;
-	font-weight:bold;
-	color:#999999;
-}
-.smallgraytext a{
-	font: 0.7em Tahoma, sans-serif;
-	font-size: 11px;
-	font-weight:bold;
-	color:#999999;
-	text-decoration:none;
-}
-.smallgraytext a:hover{
 	text-decoration:underline;
 }
 

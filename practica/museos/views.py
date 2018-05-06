@@ -43,7 +43,7 @@ def home(request):
 			title = name.Title
 			if not title:
 				title = "Página de " + username
-			personal_pages += "Título: <a href='/" + username + "'>" + title + "</a> Usuario: " + username + "<br/><br/>"
+			personal_pages += "<a href='/" + username + "'>" + title + "</a> | " + username + "<br/><br/>"
 		
 		return render_to_response('index.html', {'user': user_login, 'commented_museums': commented_museums, 'personal_pages': personal_pages, 
 												'str': string, 'button': button, 'museums2show': museums2show})
@@ -114,16 +114,22 @@ def museums(request):
 		response = "Method not allowed"
 		return HttpResponse(response, status = 405)
 
-
+@csrf_exempt
 def museum_page(request, id):
-	if request.method == 'GET':
+	if request.method == 'GET' or request.method == 'POST':
+		# Variable para mostrarla en el registration-box
 		user_login = request.user
 		try:
 			museum = Museums.objects.get(id = id)
+			if request.method == 'POST':
+				comment = request.POST['comment']
+				new_comment = Comments(Museum = museum,  Commentary = comment)
+				new_comment.save()
 			comments = Comments.objects.filter(Museum = museum)
 			return render_to_response('museum_page.html', {'user': user_login, 'museum': museum, 'comments': comments})  
 		except Museums.DoesNotExist:
 			response = "Page not found"
+			# NOTA: Faltaria Responder a través de un template de "Page Not Found"
 			return HttpResponseNotFound(response)
 	else:
 		response = "Method not allowed"
@@ -160,7 +166,7 @@ def login(request):
 		user = auth.authenticate(username = username, password = password)
 		if user is not None and user.is_active:
 			auth.login(request, user)
-			return HttpResponseRedirect("/")
+		return HttpResponseRedirect("/")
 	else:
 		response = "Method not allowed"
 		return HttpResponse(response, status = 405)

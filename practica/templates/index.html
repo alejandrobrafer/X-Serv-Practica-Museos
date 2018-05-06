@@ -49,6 +49,7 @@
 					{% endblock %}
 				</div>
 			</div>
+
 			<!---Parte del submenu, que la tengo para la imagen de debajo del menu-->
 			<div id="submenu">
 				<div align="right" class="smallgraytext" style="padding:9px;"></div>
@@ -58,7 +59,7 @@
 			<div id="contenttext">
 				{% block contenttext %}
 					<div> <style="padding:10px">
-						<span class="titletext">Bienvenid@!</span>
+						<span class="titletext">Bienvenid@</span>
 					</style></div>
 
 					<div class="bodytext" style="padding:12px;" align="justify">
@@ -67,9 +68,9 @@
 						
 						<table border=”0″ cellpadding=”1″ cellspacing="2" align="center" bordercolor="#F39C12">
 							<tr bgcolor= "#F39C12" >
-								<th><center>Nombre</center></th>
-								<th><center>Dirección</center></th>
-								<th><center>Enlace</center></th>
+								<th><center><font face="verdana" color= #FFFFFF size= 2>Nombre</font></center></th>
+								<th><center><font face="verdana" color= #FFFFFF size= 2>Dirección</font></center></th>
+								<th><center><font face="verdana" color= #FFFFFF size= 2>Enlace</font></center></th>
 							<tr>
 							{% for commented_museum in commented_museums %}
 								{% if commented_museum.num_comments > 0 %}
@@ -102,8 +103,8 @@
 			<div id="leftpanel"> 
 				<div align="justify" class="graypanel">
 					{% block leftpanel %}
-						<center><span class="smalltitle">Páginas personales</span></center><br/><br/>
-						<center>{{ personal_pages |safe}}</center>
+						<center><span class="smalltitle"><u>Páginas personales</u></span></center><br/><br/>
+						<center><font face="courier new" color= #626567 size=2>{{ personal_pages |safe}}</font></center>
 					{% endblock %}
 				</div>
 			</div>
