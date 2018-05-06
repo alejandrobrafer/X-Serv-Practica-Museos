@@ -7,16 +7,18 @@
 {% endblock %}
 
 
-<!-- En la página personal del usuario en el cuadrado de la izquierda, mostrará el formulario de la parte privada-->
+<!-- En la página personal del usuario en el cuadrado de la izquierda, mostrará el formulario de la parte privada -->
 {% block leftpanel %}
 	{% if user.is_authenticated and user == user_page %}	
-	<center><span class = "smalltitle"><u>Ponlo a tu gusto</u></span></center><br/><br/>
+	<center><span class = "smalltitle"><u>Ponlo a tu gusto</u></span></center><br/>
+		<center><font face="Comic Sans MS" color= #666666 size= 2> * Personaliza el título</font></center>
 		<form method = "POST" action = "">
 		    <input type = "text" name = 'title' placeholder = "Escribe aquí el título" />
 		   	<input type = "submit" value = "Enviar" />
 		   	<br/>
-		</form><br/><br/><br/>
+		</form><br/>
 
+		<center><font face="Comic Sans MS" color= #666666 size= 2> * Personaliza el estilo</font></center>
 		<form method = "POST" action = "/templates/style.css">
 		{% csrf_token %}
 			<select name = "background_color">
@@ -43,40 +45,52 @@
 				<option value = "1.7">1.7</option>
 				<option value = "2">2</option>
 			</select><br/>
-			<input type="submit" value="Enviar">
+			<input type = "submit" value = "Enviar">
 		</form>
 	{% else %}
-		<center><font face="courier new" color= #FFFFFF size=2>Estos son los museos que más me han interesado.</font></center>
+		<center><font face="Comic Sans MS" color= #FFFFFF size=3><b>Hola, soy {{user_page}}.<br/><br/>Estoy encantad@ de que estes visitando mi página personal. Estos son los museos que más me interesan, espero que te gusten.</b></font></center>
 	{% endif %}
 {% endblock %}
 
 
 <!-- En la pagina principal en el cuadrado del centro, mostrará el listado con los museos comentados-->
 {% block contenttext %}
-<div> <style="padding:10px">
-	<span class="titletext">{{title | safe}}</span>
-</style></div>
+	<div> <style="padding:10px">
+		<span class="titletext">{{title | safe}}</span>
+	</style></div>
 
-<div class="bodytext" style="padding:12px;" align="justify">
-	<table border=”0″ cellpadding=”1″ cellspacing="2" align="center" bordercolor="#F39C12">
-		<tr bgcolor= "#F39C12" >
-			<th><center><font face="verdana" color= #FFFFFF size= 2>Nombre</font></center></th>
-			<th><center><font face="verdana" color= #FFFFFF size= 2>Dirección</font></center></th>
-			<th><center><font face="verdana" color= #FFFFFF size= 2>Fecha de la selección</font></center></th>
-			<th><center><font face="verdana" color= #FFFFFF size= 2>Enlace</font></center></th>
-		<tr>
-		{% for museum in museums %}
-			<tr>
-				<td nowrap><a href='{{museum.Museum.URL | safe}}' target="_blank">{{museum.Museum.Name | safe}}</a></td>
-				<td>{{museum.Museum.Street_Type | safe}} {{museum.Museum.Street_Name | safe}} {{museum.Museum.Street_Num | safe}}</td>
-				<td nowrap>{{museum.Date | safe}}</td>
-				<td><a href='/museos/{{museum.Museum.id | safe}}'>Más información</a></td>
-			</tr>
-		{% endfor %}
-	</table>
-	
-	{% if button %}
-		<br/><center>{{button | safe}} </center>
+	{% if museums %}
+		<div class="bodytext" style="padding:12px;" align="justify">
+			<table border=”0″ cellpadding=”1″ cellspacing="2" align="center" bordercolor="#F39C12">
+				<caption>Museos Seleccionados</caption>
+				<tr bgcolor= "#F39C12" >
+					<th><center><font face="verdana" color= #FFFFFF size= 2>Nombre</font></center></th>
+					<th><center><font face="verdana" color= #FFFFFF size= 2>Dirección</font></center></th>
+					<th><center><font face="verdana" color= #FFFFFF size= 2>Fecha</font></center></th>
+					<th><center><font face="verdana" color= #FFFFFF size= 2>Enlace</font></center></th>
+				<tr>
+				{% for museum in museums %}
+					<tr align="center">
+						<td nowrap><a href='{{museum.Museum.URL | safe}}' target="_blank">{{museum.Museum.Name | safe}}</a></td>
+						{% if museum.Museum.Street_Num %}
+							<td>{{museum.Museum.Street_Type | safe}} {{museum.Museum.Street_Name | safe}} {{museum.Museum.Street_Num | safe}}</td>
+						{% else %}
+							<td>{{museum.Museum.Street_Type | safe}} {{museum.Museum.Street_Name | safe}}</td>
+						{% endif %}
+						<td nowrap>{{museum.Date | safe}}</td>
+						<td><a href='/museos/{{museum.Museum.id | safe}}'>Más información</a></td>
+					</tr>
+				{% endfor %}
+			</table>
+			
+			{% if button %}
+				<br/><center>{{button | safe}} </center>
+			{% endif %}
+		</div>	
+	{% else %}
+		<div class="bodytext" style="padding:12px;" align="justify">
+			<br/><br/><br/><b>Ups...Sorry!<br/><br/>
+			Estoy buscando cuales son los museos que más me interesan, pronto tendre una selección que te va a encantar.Hasta pronto!<b><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/>
+		</div>
 	{% endif %}
-</div>	
 {% endblock %}

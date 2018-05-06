@@ -5,7 +5,7 @@ from django.http import HttpResponse, HttpResponseNotFound, HttpResponseRedirect
 from django.views.decorators.csrf import csrf_exempt
 from museos.models import Museums, Selected, Comments, User_Page
 from django.contrib.auth.models import User
-# https://docs.djangoproject.com/en/2.0/topics/db/aggregation/ --> Para mostrar los museos con mas comentarios
+# Museos con más comentario: https://docs.djangoproject.com/en/2.0/topics/db/aggregation/
 from django.db.models import Count
 from django.contrib import auth
 
@@ -66,15 +66,19 @@ def change_title(request, username):
 			title = "Página de " + user_page.User
 		return title
 
-
 @csrf_exempt
 def user(request, name):
-	if request.method == 'GET' or request.method == 'POST':	
+	# NOTA IMPORTANTE: HE REALIZADO LA DISTINCION DE TRES 'TIPO DE USUARIO':
+	# 1.-LOS USUARIOS REGISTRADOS
+	# 2.-LOS USUARIOS QUE TIENEN PAGINA PERSONAL
+	# 3.- LOS USUARIOS LOGEADOS
+	# LOS DOS PRIMEROS SON LOS MISMOS (SOBRE TODO EN LAS PRUEBAS CON USUARIO ROOT), Y LOS TERCEROS SON 1 DE LOS REGISTRADOS.
+	# NOTA: QUE PASA SI EL MISMO USUARIO SELECCIONA EL MISMO MUSEO 2 O MAS VECES <----> Idea en Notas
 
+	if request.method == 'GET' or request.method == 'POST':	
 		# Variable para mostrarla en el registration-box
 		user_login = request.user
-		
-		# NOTA: QUE PASA SI EL MISMO USUARIO SELECCIONA EL MISMO MUSEO 2 O MAS VECES <----> Idea en Notas
+
 		try:
 			user = User.objects.get(username = name)
 		except User.DoesNotExist:
@@ -82,11 +86,10 @@ def user(request, name):
 			# NOTA: Faltaria responder a través de un template de "Page Not Found"
 			return HttpResponseNotFound(response)
 
-		# Bloque para cambiar el titulo 
+		# Bloque para cambiar el título 
 		title = change_title(request, user.username)
 
-		# Obtención de la Query String
-		# https://docs.djangoproject.com/en/1.8/ref/request-response/
+		# Query String: https://docs.djangoproject.com/en/1.8/ref/request-response/
 		qs = request.META['QUERY_STRING']
 		if qs == "":
 			qs = 0
@@ -101,7 +104,7 @@ def user(request, name):
 		button = None 
 		if len(more_museums) > 0:
 			qs += 1
-			button = "<a href='/" + name + "?" + str(qs) + "'>" + "<button> Ver más...</button>" + "</a><br>"
+			button = "<a href='/" + name + "?" + str(qs) + "'>" + "<button> Ver más </button>" + "</a><br>"
 		return render_to_response('user.html', {'user': user_login, 'user_page': user, 'museums': museums, 'title': title, 'button': button})
 	else:
 		response = "Method not allowed"

@@ -16,20 +16,20 @@ from django.conf.urls import include, url
 from django.contrib import admin
 from django.views.static import *
 from practica import settings
-from django.contrib.auth.views import logout, login
-from django.views.generic import RedirectView
+from django.contrib.auth.views import logout
+
 
 urlpatterns = [
     # https://docs.djangoproject.com/en/1.8/_modules/django/contrib/auth/views/
     url(r'^logout$', logout, {'next_page': '/'}),
-    url(r'^login$', 'museos.views.login', name = "Entrada de usuarios."),
+    url(r'^login$', 'museos.views.login', name = "Función que proporciona el logeado"),
     url(r'^admin/', include(admin.site.urls)),
     url(r'^templates/style\.css', 'museos.views.define_style', name = "Función para definir el estilo CSS"),
- 	url(r'^about$', 'museos.views.about', name = "Pagina para mas informacion."),
-	url(r'^museos/(\d+)$', 'museos.views.museum_page', name = "Pagina del museo."),
+ 	url(r'^about$', 'museos.views.about', name = "Página para más informacion."),
+	url(r'^museos/(\d+)$', 'museos.views.museum_page', name = "Página del museo."),
 	url(r'^museos$', 'museos.views.museums', name = "Listado con todos los museos."),
-	url(r'^$', 'museos.views.home', name = "Pagina principal"),
+	url(r'^$', 'museos.views.home', name = "Página principal"),
     url(r'^(.+)/xml$', 'museos.views.xml_user', name = "Canal XML del usuario."),
     url(r'^templates/(?P<path>.*)$',  serve, {'document_root': settings.STATIC_URL}),
-    url(r'^(.+)$', 'museos.views.user', name = "Pagina del usuario."),
+    url(r'^(.+)$', 'museos.views.user', name = "Página del usuario."),
 ]

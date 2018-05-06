@@ -1,6 +1,7 @@
 # Create your models here.
 from django.db import models
 
+
 class Museums(models.Model):
 	Name = models.CharField(max_length = 128)
 	Description = models.TextField(null = True, blank = True)
@@ -28,7 +29,7 @@ class Museums(models.Model):
 	def __str__(self):
 		return self.Name
 
-# A través del nombre del usuario yo filtro y me saldran todos los museos seleccionados por el usuario.
+# A través del nombre del usuario filtro y me saldrán todos los museos seleccionados por el usuario.
 class Selected(models.Model):
 	Museum = models.ForeignKey(Museums)
 	User = models.CharField(max_length = 32)

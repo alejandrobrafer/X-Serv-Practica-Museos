@@ -73,10 +73,14 @@
 							<tr>
 							{% for commented_museum in commented_museums %}
 								{% if commented_museum.num_comments > 0 %}
-									<tr>
+									<tr align="center">
 										<td nowrap><a href='{{commented_museum.URL | safe}}' target="_blank">{{commented_museum.Name | safe}}</a></td>
-										<td nowrap>{{commented_museum.Street_Type | safe}} {{commented_museum.Street_Name | safe}} {{commented_museum.Street_Num | safe}} 
-											{{commented_museum.Postal_Code| safe}} {{commented_museum.Province| safe}} </td>
+										{% if commented_museum.Street_Num %}
+											<td>{{commented_museum.Street_Type | safe}} {{commented_museum.Street_Name | safe}} 
+											{{commented_museum.Street_Num | safe}}</td>
+										{% else %}
+											<td>{{commented_museum.Street_Type | safe}} {{commented_museum.Street_Name | safe}}</td>
+										{% endif %}
 										<td nowrap><a href='/museos/{{commented_museum.id | safe}}'>Más información</a></td>
 									</tr>
 								{% endif %}
