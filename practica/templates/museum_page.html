@@ -1,5 +1,6 @@
 {% extends "index.html" %}
 
+
 <!-- Menú identificativo de las páginas a excepción de la de inicio. -->
 {% block menu %}
 	<a href="/">Inicio</a> | <a href="/about">About</a> | <a href="/museos">Todos</a>
@@ -16,7 +17,7 @@
 	{% if user.is_authenticated %}
 		<form method="POST" action="">
 	    	<textarea name="comment" rows="10" cols="20" placeholder="Escribe aquí tus comentarios"></textarea>
-	    	<input type="submit" name="Submit" value="Enviar" />
+	    	<input type="submit" value="Enviar" />
 	  		<br/>
 	 	</form>
 	{% endif %}

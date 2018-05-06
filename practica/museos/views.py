@@ -52,17 +52,34 @@ def home(request):
 		return HttpResponse(response, status = 405)
 
 
+def change_title(request, username):
+	if request.method == 'POST':
+		title = request.POST['title']
+		user_page = User_Page.objects.get(User = username)
+		new_title = User_Page(id = user_page.id, User = user_page.User, Title = title, Font = user_page.Font, Background_Color = user_page.Background_Color)
+		new_title.save()
+		return new_title.Title
+	elif request.method == 'GET':
+		user_page = User_Page.objects.get(User = username)
+		return user_page.Title
+
 @csrf_exempt
 def user(request, name):
-	if request.method == 'GET':	
+	if request.method == 'GET' or request.method == 'POST':	
+
+		# Variable para mostrarla en el registration-box
 		user_login = request.user
 		
 		# NOTA: QUE PASA SI EL MISMO USUARIO SELECCIONA EL MISMO MUSEO 2 O MAS VECES <----> Idea en Notas
 		try:
 			user = User.objects.get(username = name)
 		except User.DoesNotExist:
-			# NOTA: MEJORAR CON EL USO DE UN TEMPLATES PARA USUARIO NO EXISTENTE
-			return HttpResponseNotFound("USER NOT EXIT.")
+			response = "User not exit"
+			# NOTA: Faltaria responder a través de un template de "Page Not Found"
+			return HttpResponseNotFound(response)
+
+		# Bloque para cambiar el titulo 
+		title = change_title(request, user.username)
 
 		# Obtención de la Query String
 		# https://docs.djangoproject.com/en/1.8/ref/request-response/
@@ -82,7 +99,7 @@ def user(request, name):
 			qs += 1
 			button = "<a href='/" + name + "?" + str(qs) + "'>" + "<button> Ver más...</button>" + "</a><br>"
 
-		return render_to_response('user.html', {'user': user_login, 'museums': museums, 'name': name, 'button': button})
+		return render_to_response('user.html', {'user': user_login, 'museums': museums, 'title': title, 'button': button})
 	else:
 		response = "Method not allowed"
 		return HttpResponse(response, status = 405)
@@ -129,7 +146,7 @@ def museum_page(request, id):
 			return render_to_response('museum_page.html', {'user': user_login, 'museum': museum, 'comments': comments})  
 		except Museums.DoesNotExist:
 			response = "Page not found"
-			# NOTA: Faltaria Responder a través de un template de "Page Not Found"
+			# NOTA: Faltaria responder a través de un template de "Page Not Found"
 			return HttpResponseNotFound(response)
 	else:
 		response = "Method not allowed"
@@ -141,8 +158,9 @@ def xml_user(request, name):
 		try:
 			user = User.objects.get(username = name)
 		except User.DoesNotExist:
-			# NOTA: MEJORAR CON EL USO DE UN TEMPLATES PARA USUARIO NO EXISTENTE
-			return HttpResponseNotFound("USER NOT EXIT.")
+			response = "User not exit"
+			# NOTA: Faltaria responder a través de un template de "Page Not Found"
+			return HttpResponseNotFound(response)
 
 		selection = Selected.objects.filter(User = user)
 		# EL content_type = "text/xml" INDICA COMO QUIERO MOSTRAR LOS DATOS EN EL NAVEGADOR

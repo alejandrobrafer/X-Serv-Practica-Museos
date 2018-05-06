@@ -8,15 +8,19 @@
 
 <!-- En la página personal del usuario en el cuadrado de la izquierda, mostrará el formulario de la parte privada-->
 {% block leftpanel %}
-	Formulario de la parte privada
+	<center><span class="smalltitle"><u>Ponlo a tu gusto</u></span></center><br/><br/>
+	<form method="POST" action="">
+	    <input type="text" name='title' placeholder="Escribe aquí el título" />
+	   	<input type="submit" value="Enviar" />
+	   	<br/>
+	 </form>
 {% endblock %}
 
 
 <!-- En la pagina principal en el cuadrado del centro, mostrará el listado con los museos comentados-->
-<!-- NOTA: AQUI MEJOR EL TITULO DE LA PAGINA -->
 {% block contenttext %}
 <div> <style="padding:10px">
-	<span class="titletext">{{name | safe}}</span>
+	<span class="titletext">{{title | safe}}</span>
 </style></div>
 
 <div class="bodytext" style="padding:12px;" align="justify">

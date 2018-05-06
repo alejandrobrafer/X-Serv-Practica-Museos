@@ -28,7 +28,6 @@
 					{% else %}
 						<p class="welcome">Welcome, Guest. Please login or <a href="#">register</a>.</p>
 						<form method="POST" action="/login">
-							{% csrf_token %}
 	    					<p><label>Usuario
 	    					<input type="username" class="fields" name='username' />
 	   						</label>
