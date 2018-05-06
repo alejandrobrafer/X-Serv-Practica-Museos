@@ -24,11 +24,12 @@ urlpatterns = [
     url(r'^logout$', logout, {'next_page': '/'}),
     url(r'^login$', 'museos.views.login', name = "Entrada de usuarios."),
     url(r'^admin/', include(admin.site.urls)),
+    url(r'^templates/style\.css', 'museos.views.define_style', name = "Función para definir el estilo CSS"),
  	url(r'^about$', 'museos.views.about', name = "Pagina para mas informacion."),
 	url(r'^museos/(\d+)$', 'museos.views.museum_page', name = "Pagina del museo."),
 	url(r'^museos$', 'museos.views.museums', name = "Listado con todos los museos."),
 	url(r'^$', 'museos.views.home', name = "Pagina principal"),
     url(r'^(.+)/xml$', 'museos.views.xml_user', name = "Canal XML del usuario."),
-    url(r'^.*static/(?P<path>.*)$', serve, {'document_root': settings.STATIC_URL}),
+    url(r'^templates/(?P<path>.*)$',  serve, {'document_root': settings.STATIC_URL}),
     url(r'^(.+)$', 'museos.views.user', name = "Pagina del usuario."),
 ]

@@ -12,7 +12,7 @@ body {
 #toplinks{position:absolute; right:10px; top:10px;}
 #menu{float:right; width:796px; height:32px; background-image:url(bg_menu.gif); background-repeat:repeat-x;}
 #submenu{float:right; width:526px; height:32px; background-image:url(bg_submenu.gif); background-position:top; background-repeat:repeat-x; background-color:#F0F0F0;}
-#contenttext{float:right; width:526px; background-color:#F0F0F0;}
+#contenttext{float:right; width:526px; background-color:{{ background_color }};}
 #leftpanel{float:left; width:270px;}
 #footer{float:left; width:780px; background-color:#F0F0F0; padding:10px;}
 
@@ -24,7 +24,7 @@ body {
 /*TEXT STYLES*/
 /* Estilo del cuerpo en general */
 .bodytext {
-	font: 0.7em Verdana, sans-serif;
+	font: {{font_size}}em Verdana, sans-serif;
 	color: #666666;
 }
 

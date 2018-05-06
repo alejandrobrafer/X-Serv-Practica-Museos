@@ -1,6 +1,6 @@
 # Create your views here.
 
-from django.shortcuts import render_to_response, render
+from django.shortcuts import render_to_response
 from django.http import HttpResponse, HttpResponseNotFound, HttpResponseRedirect
 from django.views.decorators.csrf import csrf_exempt
 from museos.models import Museums, Selected, Comments, User_Page
@@ -61,7 +61,11 @@ def change_title(request, username):
 		return new_title.Title
 	elif request.method == 'GET':
 		user_page = User_Page.objects.get(User = username)
-		return user_page.Title
+		title = user_page.Title
+		if not user_page.Title:
+			title = "Página de " + user_page.User
+		return title
+
 
 @csrf_exempt
 def user(request, name):
@@ -98,8 +102,7 @@ def user(request, name):
 		if len(more_museums) > 0:
 			qs += 1
 			button = "<a href='/" + name + "?" + str(qs) + "'>" + "<button> Ver más...</button>" + "</a><br>"
-
-		return render_to_response('user.html', {'user': user_login, 'museums': museums, 'title': title, 'button': button})
+		return render_to_response('user.html', {'user': user_login, 'user_page': user, 'museums': museums, 'title': title, 'button': button})
 	else:
 		response = "Method not allowed"
 		return HttpResponse(response, status = 405)
@@ -130,6 +133,7 @@ def museums(request):
 	else:
 		response = "Method not allowed"
 		return HttpResponse(response, status = 405)
+
 
 @csrf_exempt
 def museum_page(request, id):
@@ -185,6 +189,39 @@ def login(request):
 		if user is not None and user.is_active:
 			auth.login(request, user)
 		return HttpResponseRedirect("/")
+	else:
+		response = "Method not allowed"
+		return HttpResponse(response, status = 405)
+
+
+@csrf_exempt
+def define_style(request):
+	default_background_color = "#F0F0F0"
+	default_font_size = '0.7'
+	if request.method == "GET":
+		if request.user.is_authenticated():
+			try:
+				# Necesito comprobarlo ya que no todos los usuario que estan logeados "puede" que no tengan pagina personal (Ej_root)
+				user_page = User_Page.objects.get(User = request.user.username)
+				background_color = user_page.Background_Color
+				font_size = user_page.Font
+				if not background_color or not font_size:
+					background_color = default_background_color
+					font_size = default_font_size
+			except User_Page.DoesNotExist:
+				background_color = default_background_color
+				font_size = default_font_size
+		else:
+			background_color = default_background_color
+			font_size = default_font_size
+		return render_to_response('style.css', {'background_color': background_color, 'font_size': font_size}, content_type = "text/css")
+	elif request.method == 'POST':
+		background_color = request.POST['background_color']
+		font_size =request.POST['font']
+		user_page = User_Page.objects.get(User = request.user.username)
+		new_title = User_Page(id = user_page.id, User = user_page.User, Title = user_page.Title, Font = font_size, Background_Color = background_color)
+		new_title.save()
+		return HttpResponseRedirect("/" + user_page.User)
 	else:
 		response = "Method not allowed"
 		return HttpResponse(response, status = 405)

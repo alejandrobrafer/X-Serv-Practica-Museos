@@ -1,19 +1,53 @@
 {% extends "index.html" %}
 
 
+<!-- Menú identificativo de las páginas a excepción de la de inicio. -->
 {% block menu %}
-	<a href="/">Inicio</a> | <a href="/about">About</a> | <a href="/museos">Todos</a>
+	<a href = "/">Inicio</a> | <a href = "/about">About</a> | <a href = "/museos">Todos</a>
 {% endblock %}
 
 
 <!-- En la página personal del usuario en el cuadrado de la izquierda, mostrará el formulario de la parte privada-->
 {% block leftpanel %}
-	<center><span class="smalltitle"><u>Ponlo a tu gusto</u></span></center><br/><br/>
-	<form method="POST" action="">
-	    <input type="text" name='title' placeholder="Escribe aquí el título" />
-	   	<input type="submit" value="Enviar" />
-	   	<br/>
-	 </form>
+	{% if user.is_authenticated and user == user_page %}	
+	<center><span class = "smalltitle"><u>Ponlo a tu gusto</u></span></center><br/><br/>
+		<form method = "POST" action = "">
+		    <input type = "text" name = 'title' placeholder = "Escribe aquí el título" />
+		   	<input type = "submit" value = "Enviar" />
+		   	<br/>
+		</form><br/><br/><br/>
+
+		<form method = "POST" action = "/templates/style.css">
+		{% csrf_token %}
+			<select name = "background_color">
+				<option value = "#F0F0F0">Predeterminado</option>
+				<option value = "red">Rojo</option>
+				<option value = "blue">Azul</option>
+				<option value = "green">Verde</option>
+				<option value = "yellow">Amarillo</option>
+				<option value = "pink">Rosa</option>
+				<option value = "purple">Morado</option>
+				<option value = "black">Negro</option>
+				<option value = "grey">Gris</option>
+				<option value = "#48D1CC">Turquesa</option>
+				<option value = "brown">Marrón</option>
+       		</select>
+       		<br/>
+       		<select name = "font">
+ 				<option value = "0.7">Predeterminado</option>
+				<option value = "0.2">0.2</option>
+				<option value = "0.4">0.4</option>
+				<option value = "1">1</option>
+				<option value = "1.2">1.2</option>
+				<option value = "1.5">1.5</option>
+				<option value = "1.7">1.7</option>
+				<option value = "2">2</option>
+			</select><br/>
+			<input type="submit" value="Enviar">
+		</form>
+	{% else %}
+		<center><font face="courier new" color= #FFFFFF size=2>Estos son los museos que más me han interesado.</font></center>
+	{% endif %}
 {% endblock %}
 
 
@@ -24,14 +58,12 @@
 </style></div>
 
 <div class="bodytext" style="padding:12px;" align="justify">
-	<strong>Estos son los museos seleccionados por {{name | safe}}:</strong><br/><br/>
-	
 	<table border=”0″ cellpadding=”1″ cellspacing="2" align="center" bordercolor="#F39C12">
 		<tr bgcolor= "#F39C12" >
-			<th><center>Nombre</center></th>
-			<th><center>Dirección</center></th>
-			<th><center>Fecha de la selección</center></th>
-			<th><center>Enlace</center></th>
+			<th><center><font face="verdana" color= #FFFFFF size= 2>Nombre</font></center></th>
+			<th><center><font face="verdana" color= #FFFFFF size= 2>Dirección</font></center></th>
+			<th><center><font face="verdana" color= #FFFFFF size= 2>Fecha de la selección</font></center></th>
+			<th><center><font face="verdana" color= #FFFFFF size= 2>Enlace</font></center></th>
 		<tr>
 		{% for museum in museums %}
 			<tr>
