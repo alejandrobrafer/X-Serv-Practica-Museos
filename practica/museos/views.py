@@ -9,22 +9,12 @@ from django.contrib.auth.models import User
 from django.db.models import Count
 from django.contrib import auth
 
-registration_form = '''
-<form method="POST" action="/login">
-<p><label>Usuario
-<input type="username" class="fields" name='username' />
-</label>
-<label>Contraseña
-<input type="password" class="fields" name='password' />
-<input type="submit" class="submit_button" name="Submit" value="Entrar" />
-</label></p>
-</form>
-'''
 
 @csrf_exempt
 def home(request):
 	if request.method == 'GET':
 		user_login = request.user
+		
 		# Nota: Abra una parte con el filtrado del XML de Museos de Madrid.
 		museums2show = None
 		string = ""
@@ -61,15 +51,13 @@ def home(request):
 		response = "Method not allowed"
 		return HttpResponse(response, status = 405)
 
+
 @csrf_exempt
 def user(request, name):
 	if request.method == 'GET':	
 		user_login = request.user
-		# NOTA: QUE PASA SI EL MISMO USUARIO SELECCIONA EL MISMO MUSEO 2 O MAS VECES <----> Idea en Notas
 		
-		if request.user.is_authenticated():
-			print("HOLA")
-
+		# NOTA: QUE PASA SI EL MISMO USUARIO SELECCIONA EL MISMO MUSEO 2 O MAS VECES <----> Idea en Notas
 		try:
 			user = User.objects.get(username = name)
 		except User.DoesNotExist:
@@ -99,9 +87,11 @@ def user(request, name):
 		response = "Method not allowed"
 		return HttpResponse(response, status = 405)
 
+
 @csrf_exempt
 def museums(request):
 	# NOTA: supongo que aqui es donde se añadiran los museos a un usuario registrado
+	
 	user_login = request.user
 	# Es necesario sacar una lista de los distritos para pasarlo al formulario
 	# Con el list(set()) lo que obtengo es los valores no repetidos de una lista
@@ -112,7 +102,7 @@ def museums(request):
 
 	if request.method == 'GET':
 		museums = Museums.objects.all()
-		return render_to_response('museums.html', {'user': user, 'museums': museums, 'districts': districts}) 
+		return render_to_response('museums.html', {'user': user_login, 'museums': museums, 'districts': districts}) 
 	elif request.method == 'POST':
 		dm = request.POST['Option']
 		if dm == "Todos":

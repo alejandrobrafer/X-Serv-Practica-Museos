@@ -22,7 +22,9 @@
 					{% if user.is_authenticated %}
 						 <p class="welcome">Identificador del usuario:  <font style="text-transform: uppercase;">{{user.username | safe}} </font><br/>
 						 Fecha de suscripción:  {{user.date_joined | safe}} <br/>
-						 Última visita:  {{user.last_login | safe}}!<br/></p>
+						 Última visita:  {{user.last_login | safe}}!<br/></p><br/><br/>
+
+						 <a href="/logout"><button>Cerrar sesión</button></a><br>
 					{% else %}
 						<p class="welcome">Welcome, Guest. Please login or <a href="#">register</a>.</p>
 						<form method="POST" action="/login">

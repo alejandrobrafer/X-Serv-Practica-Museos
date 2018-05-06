@@ -20,9 +20,9 @@ from django.contrib.auth.views import logout, login
 from django.views.generic import RedirectView
 
 urlpatterns = [
-    url(r'^logout', logout),
-    url(r'^login', 'museos.views.login', name = "Entrada de usuarios."),
-    #url(r'^accounts/profile/', RedirectView.as_view(url = '/', permanent = True)),
+    # https://docs.djangoproject.com/en/1.8/_modules/django/contrib/auth/views/
+    url(r'^logout$', logout, {'next_page': '/'}),
+    url(r'^login$', 'museos.views.login', name = "Entrada de usuarios."),
     url(r'^admin/', include(admin.site.urls)),
  	url(r'^about$', 'museos.views.about', name = "Pagina para mas informacion."),
 	url(r'^museos/(\d+)$', 'museos.views.museum_page', name = "Pagina del museo."),
