@@ -226,8 +226,13 @@ def museum_page(request, id):
 					date = time.strftime("%d/%m/%y")
 					new_selection = Selected(Museum = museum, User = user_login, Date = date)
 					new_selection.save()
+				elif 'delete' in request.POST:
+					deleted = request.POST['delete']
+					museum = Museums.objects.get(Name = deleted)
+					instance = Selected.objects.get(Museum = museum, User = user_login)
+					instance.delete()
 
-			# Bloque para determinar si puedo añadir o no el museo a un usuario
+			# Bloque para determinar si puedo añadir/eliminar o no el museo a un usuario
 			show_select = True	
 			selections = Selected.objects.filter(User = user_login)
 			for selection in selections:

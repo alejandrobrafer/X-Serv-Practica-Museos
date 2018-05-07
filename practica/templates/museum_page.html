@@ -33,13 +33,19 @@
 
 	 	{% if show_select %}
 		 	<center><span class="smalltitle">¿Te interesa?</span></center><br/>
-		 	<form method="POST" action="/museos/{{museum.id| safe}} ">
+		 	<form method="POST" action="/museos/{{museum.id | safe}} ">
 		 		<input type="checkbox" value="{{museum.Name}}" name="select" checked/>
 		    	<input type="submit" value=" Añadir " />
 		  		<br/>
 		 	</form><br/>
 		{% else %}
 			<center><font face="impact" color= "green" size= 4>AÑADIDO</center><br/>
+			<center><span class="smalltitle">¿Deséas eliminarlo?</span></center>
+		 	<form method="POST" action="/museos/{{museum.id | safe}} ">
+		 		<input type="checkbox" value="{{museum.Name}}" name="delete" checked/>
+		    	<input type="submit" value=" Eliminar " />
+		  		<br/>
+		 	</form><br/>
 		{% endif %}
 	{% endif %}
 {% endblock %}

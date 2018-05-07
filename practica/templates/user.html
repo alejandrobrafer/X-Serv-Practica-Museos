@@ -79,7 +79,7 @@
 				<tr>
 				{% for museum in museums %}
 					<tr align="center">
-						<td nowrap><a href='{{museum.Museum.URL | safe}}' target="_blank">{{museum.Museum.Name | safe}}</a></td>
+						<td><a href='{{museum.Museum.URL | safe}}' target="_blank">{{museum.Museum.Name | safe}}</a></td>
 						{% if museum.Museum.Street_Num %}
 							<td>{{museum.Museum.Street_Type | safe}} {{museum.Museum.Street_Name | safe}} {{museum.Museum.Street_Num | safe}}</td>
 						{% else %}
