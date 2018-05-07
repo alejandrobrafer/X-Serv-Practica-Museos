@@ -3,9 +3,17 @@
 
 <!-- Menú identificativo de las páginas a excepción de la de inicio. -->
 {% block menu %}
-	<a href = "/">Inicio</a> | <a href = "/about">About</a> | <a href = "/museos">Todos</a>
+	{% if user.is_authenticated %}
+		<a href="/">Inicio</a> | <a href="/about">About</a> | <a href="/museos">Todos</a> | <a href="/{{user.username}}">Página personal</a> | 
+		<a href="/{{user.username}}/xml" target="_blank">Canal XML</a>
+	{% else %}
+		<a href="/">Inicio</a> | <a href="/about">About</a> | <a href="/museos">Todos</a> 
+	{% endif %}
 {% endblock %}
 
+{% block submenu %}
+	<a href="/{{user_page}}/xml" target="_blank"><button>Canal XML</button></a>
+{% endblock %}
 
 <!-- En la página personal del usuario en el cuadrado de la izquierda, mostrará el formulario de la parte privada -->
 {% block leftpanel %}

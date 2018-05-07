@@ -1,18 +1,24 @@
 {% extends "index.html" %}
 
 
+<!-- Menú identificativo de las páginas a excepción de la de inicio. -->
 {% block menu %}
-	<a href="/">Inicio</a> | <a href="/about">About</a> | <a href="/museos">Todos</a>
+	{% if user.is_authenticated %}
+		<a href="/">Inicio</a> | <a href="/about">About</a> | <a href="/museos">Todos</a> | <a href="/{{user.username}}">Página personal</a> | 
+		<a href="/{{user.username}}/xml" target="_blank">Canal XML</a>
+	{% else %}
+		<a href="/">Inicio</a> | <a href="/about">About</a> | <a href="/museos">Todos</a>
+	{% endif %}
 {% endblock %}
 
 
-<!-- En la página museos en el cuadrado de la izquierda, mostrará algo tipo descripcion, una poesia... -->
+<!-- En la página museos en el cuadrado de la izquierda, mostrará algo tipo descripcion, una poesia, una foto... -->
 {% block leftpanel %}
-	Aqui ira una poesia sobre los museos
+	<center><img src="https://www.museosdemadrid.info/wp-content/uploads/2015/10/museo-del-prado-madrid-150x150.jpg" alt="URL caida." style="max-width:150%;width:auto;height:auto;" /></center>
 {% endblock %}
 
 
-<!-- En la pagina museos en el cuadrado del centro, mostrará los museos y el formulario con el filtrado-->
+<!-- En la página museos en el cuadrado del centro, mostrará los museos y el formulario con el filtrado-->
 {% block contenttext %}
 <div> <style="padding:10px">
 	<span class="titletext">Museos</span>
@@ -41,7 +47,7 @@
 			<th><center><font face="verdana" color= #FFFFFF size= 2>Página</font></center></th>
 		<tr>
 		{% for museum in museums %}
-			<tr>
+			<tr align="center">
 				<td nowrap>{{museum.Name | safe}}</td>
 				<td nowrap>{{museum.District | safe}}</td>
 				<td nowrap><a href='/museos/{{museum.id | safe}}'>Ir</a></td>

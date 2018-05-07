@@ -3,15 +3,21 @@
 
 <!-- Menú identificativo de las páginas a excepción de la de inicio. -->
 {% block menu %}
-	<a href="/">Inicio</a> | <a href="/about">About</a> | <a href="/museos">Todos</a>
+	{% if user.is_authenticated %}
+		<a href="/">Inicio</a> | <a href="/about">About</a> | <a href="/museos">Todos</a> | <a href="/{{user.username}}">Página personal</a> | 
+		<a href="/{{user.username}}/xml" target="_blank">Canal XML</a>
+	{% else %}
+		<a href="/">Inicio</a> | <a href="/about">About</a> | <a href="/museos">Todos</a>
+	{% endif %}
 {% endblock %}
 
 
 <!-- En la página museos con identificador en el cuadrado de la izquierda, mostrará los comentarios y formulario de añadir en modo 'privado'-->
+<!-- Además aparecerá un formulario para añadir el museo a los seleccionados por el usuario registrado -->
 {% block leftpanel %}
 	<center><span class="smalltitle"><u>Comentarios</u></span></center><br/><br/>
 	{% for comment in comments %}
-		<center><font face="courier new" color= #626567 size=2>"{{comment.Commentary | safe}}"</font></center><br/>
+		<center><font face="courier new" color= #626567 size=2>"<i>{{comment.Commentary | safe}}"</i></font></center><br/>
 	{% endfor %}
 
 	{% if user.is_authenticated %}
@@ -19,7 +25,18 @@
 	    	<textarea name="comment" rows="10" cols="20" placeholder="Escribe aquí tus comentarios"></textarea>
 	    	<input type="submit" value="Enviar" />
 	  		<br/>
-	 	</form>
+	 	</form><br/><br/>
+
+	 	{% if show_select %}
+		 	<center><span class="smalltitle">¿Te ha gustado?</span></center><br/>
+		 	<form method="POST" action="/museos/{{museum.id| safe}} ">
+		 		<input type="checkbox" value="{{museum.Name}}" name="select" checked/>
+		    	<input type="submit" value=" Añadir " />
+		  		<br/>
+		 	</form><br/>
+		{% else %}
+			<center><font face="impact" color= "green" size= 4>AÑADIDO</center><br/>
+		{% endif %}
 	{% endif %}
 {% endblock %}
 
@@ -35,12 +52,13 @@
 	<b>Horario</b><br/>
 	{{museum.Schedule | safe}}<br/><br/>
 	<b>Datos de localización y contacto</b><br/>
-	<u>Dirección</u> {{museum.Street_Type | safe}} {{museum.Street_Name | safe}} {{museum.Street_Num | safe}} 
+	<center><u>Dirección</u> {{museum.Street_Type | safe}} {{museum.Street_Name | safe}} {{museum.Street_Num | safe}} 
 	{{museum.Postal_Code| safe}} {{museum.Province| safe}}<br/>
 	<u>Barrio/Distrito</u> {{museum.Neighborhood | safe}}  / {{museum.District | safe}}<br/>
 	<u>Teléfono</u> {{museum.Phone | safe}} <br/>
 	<u>Correo</u> {{museum.Email | safe}} <br/>
 	<u>Web</u><a href='{{museum.URL | safe}}' target="_blank">  Portal esmadrid</a> <br/></br>
+	</center>
 	<b>Cómo llegar</b><br/>
 	{{museum.Transport | safe}}<br/><br/>
 	<b>Accesibilidad</b><br/>

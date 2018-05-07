@@ -21,12 +21,10 @@
 				<div id="toplinks" class="smallgraytext">	
 					{% if user.is_authenticated %}
 						 <p class="welcome">Identificador del usuario:  <font style="text-transform: uppercase;">{{user.username | safe}} </font><br/>
-						 Fecha de suscripción:  {{user.date_joined | safe}} <br/>
-						 Última visita:  {{user.last_login | safe}}!<br/></p><br/><br/>
-
-						 <a href="/logout"><button>Cerrar sesión</button></a><br>
+						 Fecha de suscripción:  {{user.date_joined | safe}} <br/></p><br/>
+						 <a href="/logout"><button class="submit_button">Cerrar sesión</button></a><br>
 					{% else %}
-						<p class="welcome">Welcome, Guest. Please login or <a href="#">register</a>.</p>
+						<p class="welcome">Bienvenido!. Por favor, entra o <a href="/register">registrate</a>.</p>
 						<form method="POST" action="/login">
 	    					<p><label>Usuario
 	    					<input type="username" class="fields" name='username' />
@@ -51,21 +49,23 @@
 
 			<!---Parte del submenu, que la tengo para la imagen de debajo del menu-->
 			<div id="submenu">
-				<div align="right" class="smallgraytext" style="padding:9px;"></div>
+				<div align="right" class="smallgraytext" style="padding:20px;">
+				{% block submenu %}{% endblock %}
+				</div>
 			</div>
 
 			<!---Parte del centro-->
 			<div id="contenttext">
 				{% block contenttext %}
 					<div> <style="padding:10px">
-						<span class="titletext">Bienvenid@</span>
+						<span class="titletext">Museos ~ SARO <sup>®<sup></span>
 					</style></div>
 
 					<div class="bodytext" style="padding:12px;" align="justify">
-						<strong>Gracias por aparecer en la página de museos de la asignatura de Servicios y Aplicaciones en Redes de Ordenadores.<br/><br/>
-						En la parte inferior, se muestra un listado con los museos más comentados actualmente:</strong><br/><br/>
+						<center><b>Bienvenid@ a la página de museos de la asignatura de Servicios y Aplicaciones en Redes de Ordenadores, correspondiente a la práctica final de 2017/18.</b></center><br/><br/><br/>
 						
 						<table border=”0″ cellpadding=”1″ cellspacing="2" align="center" bordercolor="#F39C12">
+							<caption>Museos con más comentarios ordenados de forma descendente</caption>
 							<tr bgcolor= "#F39C12" >
 								<th><center><font face="verdana" color= #FFFFFF size= 2>Nombre</font></center></th>
 								<th><center><font face="verdana" color= #FFFFFF size= 2>Dirección</font></center></th>
@@ -89,7 +89,7 @@
 
 
 						{% if museums2show %}
-							<br/><br/><strong>No paramos y a continuación os pasamos más información de los museos {{str | safe}}</strong><br/><br/>
+							<br/><br/><b>{{str | safe}}</b><br/><br/>
 							{% for museum2show in museums2show %}
 								<ul><li><a href='/museos/{{museum2show.id | safe}}'> {{museum2show.Name | safe}}</a></ul>
 							{% endfor %}

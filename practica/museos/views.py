@@ -8,34 +8,36 @@ from django.contrib.auth.models import User
 # Museos con más comentario: https://docs.djangoproject.com/en/2.0/topics/db/aggregation/
 from django.db.models import Count
 from django.contrib import auth
+import time
 
 
 @csrf_exempt
 def home(request):
 	if request.method == 'GET':
+		# Variable para mostrarla en el registration-box
 		user_login = request.user
 		
 		# Nota: Abra una parte con el filtrado del XML de Museos de Madrid.
+		
 		museums2show = None
 		string = ""
 		# Obtención de la Query String: https://docs.djangoproject.com/en/1.8/ref/request-response/
 		qs = request.META['QUERY_STRING']
 		# 1/ Listado de los 5 museos con más comentario: https://docs.djangoproject.com/en/2.0/topics/db/aggregation/
-		# Con el annotate(num_comments) es como si añadieramos a la tabla Museums un nuevo campo denominado 'num_comments'
+		# Con el annotate(num_comments) es como si "añadieramos" a la tabla Museums un nuevo campo denominado 'num_comments'
 		commented_museums = Museums.objects.annotate(num_comments = Count('comments')).order_by('-num_comments')[:5]
-		button = "<a href='/?ACCESIBLES'>" + "<button> Ver más...</button>" + "</a><br>"
+		button = "<a href='/?ACCESIBLES'>" + "<button> ... </button>" + "</a><br>"
 		if qs == "ACCESIBLES":
-			string = "accesibles."
+			string = "<i>¿Te apetece salir de museos por Madrid?</i> A continuación, se muestra una lista con todos los museos accedibles en este momento."
 			museums2show = Museums.objects.filter(Accessibility = 1)
-			button = "<a href='/?TODOS'>" + "<button> Ver más...</button>" + "</a><br>"
+			button = "<a href='/?TODOS'>" + "<button> ... </button>" + "</a><br>"
 		elif qs == "TODOS":
 			# NOTA: Supongo que tras terminar de mostrar todos los museos, no aparecerá ningun botón con enlace.
-			string = "que tenemos actualmente."
+			string = "Estos son todos los museos que tenemos en la BBDD en este momento. Espero que encuentres lo que busques."
 			museums2show = Museums.objects.all()
 			button = None
 
 		# 2/ Listado con enlaces a las páginas personales
-		# NOTA: He distinguido que un usuario esté registrado, pero no tenga pagina personal (es decir el adjetivo disponible del enunciado)
 		personal_pages = ""
 		pages = User_Page.objects.all()
 		for name in pages:
@@ -72,8 +74,6 @@ def user(request, name):
 	# 1.-LOS USUARIOS REGISTRADOS
 	# 2.-LOS USUARIOS QUE TIENEN PAGINA PERSONAL
 	# 3.- LOS USUARIOS LOGEADOS
-	# LOS DOS PRIMEROS SON LOS MISMOS (SOBRE TODO EN LAS PRUEBAS CON USUARIO ROOT), Y LOS TERCEROS SON 1 DE LOS REGISTRADOS.
-	# NOTA: QUE PASA SI EL MISMO USUARIO SELECCIONA EL MISMO MUSEO 2 O MAS VECES <----> Idea en Notas
 
 	if request.method == 'GET' or request.method == 'POST':	
 		# Variable para mostrarla en el registration-box
@@ -113,11 +113,11 @@ def user(request, name):
 
 @csrf_exempt
 def museums(request):
-	# NOTA: supongo que aqui es donde se añadiran los museos a un usuario registrado
-	
+	# Variable para mostrarla en el registration-box
 	user_login = request.user
-	# Es necesario sacar una lista de los distritos para pasarlo al formulario
-	# Con el list(set()) lo que obtengo es los valores no repetidos de una lista
+	
+	# Es necesario sacar una lista de los distritos 'unívocos' para pasarlo al formulario.
+	# Con el list(set()) lo que obtengo es los valores no repetidos de una lista.
 	# value_list: https://docs.djangoproject.com/en/2.0/ref/models/querysets/
 	districts = list(set(Museums.objects.all().values_list('District')))
 	# https://stackoverflow.com/questions/10941229/convert-list-of-tuples-to-list
@@ -143,14 +143,30 @@ def museum_page(request, id):
 	if request.method == 'GET' or request.method == 'POST':
 		# Variable para mostrarla en el registration-box
 		user_login = request.user
+
 		try:
 			museum = Museums.objects.get(id = id)
 			if request.method == 'POST':
-				comment = request.POST['comment']
-				new_comment = Comments(Museum = museum,  Commentary = comment)
-				new_comment.save()
+				if 'comment' in request.POST:
+					comment = request.POST['comment']
+					new_comment = Comments(Museum = museum,  Commentary = comment)
+					new_comment.save()
+				elif 'select' in request.POST:
+					selection = request.POST['select']
+					museum = Museums.objects.get(Name = selection)
+					date = time.strftime("%d/%m/%y")
+					new_selection = Selected(Museum = museum, User = user_login, Date = date)
+					new_selection.save()
+
+			# Bloque para determinar si puedo añadir o no el museo a un usuario
+			show_select = True	
+			selections = Selected.objects.filter(User = user_login)
+			for selection in selections:
+				if museum.Name == selection.Museum.Name:
+					show_select = False
+
 			comments = Comments.objects.filter(Museum = museum)
-			return render_to_response('museum_page.html', {'user': user_login, 'museum': museum, 'comments': comments})  
+			return render_to_response('museum_page.html', {'user': user_login, 'museum': museum, 'comments': comments, 'show_select': show_select})  
 		except Museums.DoesNotExist:
 			response = "Page not found"
 			# NOTA: Faltaria responder a través de un template de "Page Not Found"
@@ -183,8 +199,8 @@ def about(request):
 
 
 @csrf_exempt
-# http://librosweb.es/libro/django_1_0/capitulo_12/utilizando_usuarios.html --> parte opcional de registro tambien
 def login(request):
+	# http://librosweb.es/libro/django_1_0/capitulo_12/utilizando_usuarios.html --> parte opcional de registro tambien
 	if request.method == 'POST':
 		username = request.POST['username']
 		password = request.POST['password']
@@ -204,13 +220,13 @@ def define_style(request):
 	if request.method == "GET":
 		if request.user.is_authenticated():
 			try:
-				# Necesito comprobarlo ya que no todos los usuario que estan logeados "puede" que no tengan pagina personal (Ej_root)
 				user_page = User_Page.objects.get(User = request.user.username)
 				background_color = user_page.Background_Color
 				font_size = user_page.Font
 				if not background_color or not font_size:
 					background_color = default_background_color
 					font_size = default_font_size
+			# Metodo de control: Me paso cuando un usuario está registrado pero no tiene Pagina personal. USUARIO ROOT (al principio)
 			except User_Page.DoesNotExist:
 				background_color = default_background_color
 				font_size = default_font_size

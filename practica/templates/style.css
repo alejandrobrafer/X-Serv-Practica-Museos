@@ -11,7 +11,7 @@ body {
 #topheader{float:right; width:526px; height:150px; background-color:#F0F0F0; position:relative; margin-top:30px;}
 #toplinks{position:absolute; right:10px; top:10px;}
 #menu{float:right; width:796px; height:32px; background-image:url(bg_menu.gif); background-repeat:repeat-x;}
-#submenu{float:right; width:526px; height:32px; background-image:url(bg_submenu.gif); background-position:top; background-repeat:repeat-x; background-color:#F0F0F0;}
+#submenu{float:right; width:526px; height:32px; background-image:url(bg_submenu.gif); background-position:top; background-repeat:repeat-x; background-color:{{ background_color }};}
 #contenttext{float:right; width:526px; background-color:{{ background_color }};}
 #leftpanel{float:left; width:270px;}
 #footer{float:left; width:780px; background-color:#F0F0F0; padding:10px;}
@@ -89,7 +89,7 @@ body {
 
 /**************************************** Form elements member login ****************************/
 p.welcome {
-	font-size: 0.8em;
+	font-size: 1em;
 	text-align: left;
 	margin-right: 30px;
 	margin-left: 35px;
@@ -114,14 +114,14 @@ input.fields {display: block;
 	    margin-bottom: 3px;}
 
 label {
-	color: #D35400;
-	font-style: italic;
+	color: #F8C471;
+	font-style: verdana;
 }
 
 .submit_button {
 	margin-top: 15px;
 	padding: 2px;
-	background-color: #EAF4D9;
+	background-color: #FAD7A0;
 	float: right;
 	margin-right: 40px;
 	border-top: 0px solid white;
