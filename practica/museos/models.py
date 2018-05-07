@@ -12,7 +12,7 @@ class Museums(models.Model):
 	URL = models.URLField(max_length = 500, null = True, blank = True)
 	Street_Name = models.CharField(max_length = 64, null = True, blank = True)
 	Street_Type = models.CharField(max_length = 32, null = True, blank = True)
-	Street_Num = models.PositiveIntegerField(null = True, blank = True)
+	Street_Num = models.FloatField(null = True, blank = True)
 	Locality = models.CharField(max_length = 32, null = True, blank = True)
 	Province = models.CharField(max_length = 32, null = True, blank = True)
 	Postal_Code = models.PositiveIntegerField(null = True, blank = True)

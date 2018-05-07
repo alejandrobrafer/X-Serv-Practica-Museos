@@ -29,7 +29,7 @@ class Migration(migrations.Migration):
                 ('URL', models.URLField(max_length=500, blank=True, null=True)),
                 ('Street_Name', models.CharField(max_length=64, blank=True, null=True)),
                 ('Street_Type', models.CharField(max_length=32, blank=True, null=True)),
-                ('Street_Num', models.PositiveIntegerField(blank=True, null=True)),
+                ('Street_Num', models.FloatField(blank=True, null=True)),
                 ('Locality', models.CharField(max_length=32, blank=True, null=True)),
                 ('Province', models.CharField(max_length=32, blank=True, null=True)),
                 ('Postal_Code', models.PositiveIntegerField(blank=True, null=True)),
