@@ -19,22 +19,41 @@
 			<!---Parte de la cabecera-->
 			<div id="topheader">
 				<div id="toplinks" class="smallgraytext">	
-					{% if user.is_authenticated %}
-						 <p class="welcome">Identificador del usuario:  <font style="text-transform: uppercase;">{{user.username | safe}} </font><br/>
-						 Fecha de suscripción:  {{user.date_joined | safe}} <br/></p><br/>
-						 <a href="/logout"><button class="submit_button">Cerrar sesión</button></a><br>
-					{% else %}
-						<p class="welcome">Bienvenido!. Por favor, entra o <a href="/register">registrate</a>.</p>
-						<form method="POST" action="/login">
-	    					<p><label>Usuario
-	    					<input type="username" class="fields" name='username' />
-	   						</label>
-	   						<label>Contraseña
-	   						<input type="password" class="fields" name='password' />
-	   						<input type="submit" class="submit_button" name="Submit" value="Entrar" />
-	   						</label></p>
-	 					 </form>
-	 				{% endif %}
+					{% if not show_record %}	
+						{% if user.is_authenticated %}
+							 <p class="welcome">Identificador del usuario:  <font style="text-transform: uppercase;">{{user.username | safe}} </font><br/>
+							 Fecha de suscripción:  {{user.date_joined | safe}} <br/></p><br/>
+							 <a href="/logout"><button class="submit_button">Cerrar sesión</button></a><br>
+						{% else %}
+							<p class="welcome">Bienvenido!. Por favor, entra o <a href="/register">registrate</a>.</p>
+							<form method="POST" action="/login">
+		    					<p>
+		    					<label>Usuario
+		    					<input type="username" class="fields" name='username' />
+		   						</label>
+		   						<label>Contraseña
+		   						<input type="password" class="fields" name='password' />
+		   						</label>
+		   						<input type="submit" class="submit_button" name="Submit" value="Entrar" />
+		   						</p>
+		 					 </form>
+		 				{% endif %}
+		 			{% else %}
+		 				<form method="POST" action="/register">
+		    				<p>
+		    				<label>Registrar el identificador
+		    				<input type="username" class="fields" name='username' />
+		   					</label>
+		   					<label>Registrar el email
+		   					<input type="email" class="fields" name='email' />
+		   					</label>
+		   					<label>Registrar la contraseña
+		   					<input type="password" class="fields" name='password' />
+		   					</label>
+		   					<input type="submit" class="submit_button" name="Submit" value="Registrarse" />
+		   					</p>
+		 				</form>
+		 			{% endif %}
 				</div>
 			</div>
 			
@@ -52,7 +71,7 @@
 				<div align="right" class="smallgraytext" style="padding:10px;">
 				{% block submenu %}
 					<form method="POST" action="/">
-		 				<input type="checkbox" value="{{museum.Name}}" name="select" checked/>
+		 				<input type="checkbox" name="update_BBDD" checked/>
 		    			<input type="submit" value=" Actualizar BBDD " />
 		  				<br/>
 		 			</form>
@@ -104,6 +123,8 @@
 							{% if button %}
 								<br/><center>{{button | safe}} </center>
 							{% endif %}
+						{% elif show_record %}
+							<center>Te estamos esperando!<br/></center>Es hora de que te registres en la página y disfrutes del todo contenido que tenemos para ti.
 						{% else %}
 							Sorry... Ahora mismo la BBDD se enceuntra vacía y no tenemos museos para mostrarte. Si lo deseea pulse el botón de arriba y se iniciará la actualización... Que disfrute!<br/><br/><br/>
 						{% endif %}
@@ -116,8 +137,12 @@
 			<div id="leftpanel"> 
 				<div align="justify" class="graypanel">
 					{% block leftpanel %}
-						<center><span class="smalltitle"><u>Páginas personales</u></span></center><br/><br/>
-						<center><font face="courier new" color= #626567 size=2>{{ personal_pages |safe}}</font></center>
+						{% if not show_record %}
+							<center><span class="smalltitle"><u>Páginas personales</u></span></center><br/><br/>
+							<center><font face="courier new" color= #626567 size=2>{{ personal_pages |safe}}</font></center>
+						{% else %}
+							<b><font face="courier new" color= #9B59B6 size=2>El museo es un institución donde la sociedad guarda, conserva, expone, muestra los objetos valiosos para la humanidad.</font></b>
+						{% endif %}
 					{% endblock %}
 				</div>
 			</div>

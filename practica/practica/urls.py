@@ -21,6 +21,7 @@ from django.contrib.auth.views import logout
 
 urlpatterns = [
     # https://docs.djangoproject.com/en/1.8/_modules/django/contrib/auth/views/
+    url(r'^register$', 'museos.views.register', name = "Función que proporciona el registro"),
     url(r'^logout$', logout, {'next_page': '/'}),
     url(r'^login$', 'museos.views.login', name = "Función que proporciona el logeado"),
     url(r'^admin/', include(admin.site.urls)),

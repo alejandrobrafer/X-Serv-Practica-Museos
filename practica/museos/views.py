@@ -80,7 +80,7 @@ def show():
 @csrf_exempt
 def home(request):
 	if request.method == 'GET' or request.method == 'POST':
-		if request.method == 'POST':
+		if request.method == 'POST' and "update_BBDD" in request.POST:
 			# Al principio de todo es necesario restaurar la BBDD
 			d = Museums.objects.all()
 			d.delete()
@@ -112,12 +112,14 @@ def home(request):
 		# 2/ Listado con enlaces a las páginas personales
 		personal_pages = ""
 		pages = User_Page.objects.all()
+		print("aqui")
 		for name in pages:
 			username = name.User
 			title = name.Title
 			if not title:
 				title = "Página de " + username
 			personal_pages += "<a href='/" + username + "'>" + title + "</a> | " + username + "<br/><br/>"
+			print(personal_pages)
 		
 		return render_to_response('index.html', {'user': user_login, 'commented_museums': commented_museums, 'personal_pages': personal_pages, 
 												'str': string, 'button': button, 'museums2show': museums2show, 'full_BBDD': full_BBDD})
@@ -270,7 +272,7 @@ def about(request):
 
 @csrf_exempt
 def login(request):
-	# http://librosweb.es/libro/django_1_0/capitulo_12/utilizando_usuarios.html --> parte opcional de registro tambien
+	# http://librosweb.es/libro/django_1_0/capitulo_12/utilizando_usuarios.html 
 	if request.method == 'POST':
 		username = request.POST['username']
 		password = request.POST['password']
@@ -278,6 +280,35 @@ def login(request):
 		if user is not None and user.is_active:
 			auth.login(request, user)
 		return HttpResponseRedirect("/")
+	else:
+		return render_to_response('error.html', {'code': 405})
+
+
+@csrf_exempt
+def register(request):
+	# https://docs.djangoproject.com/en/2.0/ref/contrib/auth/
+	if request.method == 'POST':
+		username = request.POST['username']
+		email = request.POST['email']
+		password = request.POST['password']
+		try:
+			# Compruebo que el usuario no esté ya registrado (solo puede haber nombre unívocos)
+			# Si lo estuviera, lo resuelvo logeandolo
+			user = User.objects.get(username = username)
+			user = auth.authenticate(username = username, password = password)
+			if user is not None and user.is_active:
+				auth.login(request, user)
+		except User.DoesNotExist:
+			user = User.objects.create_user(username = username, email = email, password = password)
+			user.save()
+
+			# Dada la implementación que he realizado, tras dar de alta a los usuarios, es necesario proporcionarle una Pagina de usuario
+			user = User_Page(User = user.username)
+			user.save()
+		return HttpResponseRedirect("/")
+	elif request.method == 'GET':
+		show_record = True
+		return render_to_response('index.html', {'show_record': show_record})
 	else:
 		return render_to_response('error.html', {'code': 405})
 
