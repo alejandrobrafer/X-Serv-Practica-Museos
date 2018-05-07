@@ -49,8 +49,14 @@
 
 			<!---Parte del submenu, que la tengo para la imagen de debajo del menu-->
 			<div id="submenu">
-				<div align="right" class="smallgraytext" style="padding:20px;">
-				{% block submenu %}{% endblock %}
+				<div align="right" class="smallgraytext" style="padding:10px;">
+				{% block submenu %}
+					<form method="POST" action="/">
+		 				<input type="checkbox" value="{{museum.Name}}" name="select" checked/>
+		    			<input type="submit" value=" Actualizar BBDD " />
+		  				<br/>
+		 			</form>
+				{% endblock %}
 				</div>
 			</div>
 
@@ -64,41 +70,45 @@
 					<div class="bodytext" style="padding:12px;" align="justify">
 						<center><b>Bienvenid@ a la página de museos de la asignatura de Servicios y Aplicaciones en Redes de Ordenadores, correspondiente a la práctica final de 2017/18.</b></center><br/><br/><br/>
 						
-						<table border=”0″ cellpadding=”1″ cellspacing="2" align="center" bordercolor="#F39C12">
-							<caption>Museos con más comentarios ordenados de forma descendente</caption>
-							<tr bgcolor= "#F39C12" >
-								<th><center><font face="verdana" color= #FFFFFF size= 2>Nombre</font></center></th>
-								<th><center><font face="verdana" color= #FFFFFF size= 2>Dirección</font></center></th>
-								<th><center><font face="verdana" color= #FFFFFF size= 2>Enlace</font></center></th>
-							<tr>
-							{% for commented_museum in commented_museums %}
-								{% if commented_museum.num_comments > 0 %}
-									<tr align="center">
-										<td nowrap><a href='{{commented_museum.URL | safe}}' target="_blank">{{commented_museum.Name | safe}}</a></td>
-										{% if commented_museum.Street_Num %}
-											<td>{{commented_museum.Street_Type | safe}} {{commented_museum.Street_Name | safe}} 
-											{{commented_museum.Street_Num | safe}}</td>
-										{% else %}
-											<td>{{commented_museum.Street_Type | safe}} {{commented_museum.Street_Name | safe}}</td>
-										{% endif %}
-										<td nowrap><a href='/museos/{{commented_museum.id | safe}}'>Más información</a></td>
-									</tr>
-								{% endif %}
-							{% endfor %}
-						</table>
+						{% if full_BBDD %}
+							<table border=”0″ cellpadding=”1″ cellspacing="2" align="center" bordercolor="#F39C12">
+								<caption>Museos con más comentarios ordenados de forma descendente</caption>
+								<tr bgcolor= "#F39C12" >
+									<th><center><font face="verdana" color= #FFFFFF size= 2>Nombre</font></center></th>
+									<th><center><font face="verdana" color= #FFFFFF size= 2>Dirección</font></center></th>
+									<th><center><font face="verdana" color= #FFFFFF size= 2>Enlace</font></center></th>
+								<tr>
+								{% for commented_museum in commented_museums %}
+									{% if commented_museum.num_comments > 0 %}
+										<tr align="center">
+											<td nowrap><a href='{{commented_museum.URL | safe}}' target="_blank">{{commented_museum.Name | safe}}</a></td>
+											{% if commented_museum.Street_Num %}
+												<td>{{commented_museum.Street_Type | safe}} {{commented_museum.Street_Name | safe}} 
+												{{commented_museum.Street_Num | safe}}</td>
+											{% else %}
+												<td>{{commented_museum.Street_Type | safe}} {{commented_museum.Street_Name | safe}}</td>
+											{% endif %}
+											<td nowrap><a href='/museos/{{commented_museum.id | safe}}'>Más información</a></td>
+										</tr>
+									{% endif %}
+								{% endfor %}
+							</table>
 
-
-						{% if museums2show %}
-							<br/><br/><b>{{str | safe}}</b><br/><br/>
-							{% for museum2show in museums2show %}
-								<ul><li><a href='/museos/{{museum2show.id | safe}}'> {{museum2show.Name | safe}}</a></ul>
-							{% endfor %}
-						{% endif %}
-						
-						{% if button %}
-							<br/><center>{{button | safe}} </center>
+							{% if museums2show %}
+								<br/><br/><b>{{str | safe}}</b><br/><br/>
+								{% for museum2show in museums2show %}
+									<ul><li><a href='/museos/{{museum2show.id | safe}}'> {{museum2show.Name | safe}}</a></ul>
+								{% endfor %}
+							{% endif %}
+							
+							{% if button %}
+								<br/><center>{{button | safe}} </center>
+							{% endif %}
+						{% else %}
+							Sorry... Ahora mismo la BBDD se enceuntra vacía y no tenemos museos para mostrarte. Si lo deseea pulse el botón de arriba y se iniciará la actualización... Que disfrute!<br/><br/><br/>
 						{% endif %}
 					</div>	
+
 				{% endblock %}
 			</div>
 

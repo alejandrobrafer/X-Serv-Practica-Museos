@@ -39,10 +39,7 @@ def analyze_XML():
 		elif item == "CLASE-VIAL":
 			value_street_type = attribute.firstChild.data
 		elif item == "NUM":
-			try:
-				value_street_num = attribute.firstChild.data
-			except get_prep_value.ValueError:
-				value_street_num = None
+			value_street_num = attribute.firstChild.data
 		elif item == "LOCALIDAD":
 			value_locality = attribute.firstChild.data
 		elif item == "PROVINCIA":
@@ -72,16 +69,27 @@ def analyze_XML():
 		else:
 			pass
 
+def show():	
+	# Utilizado para mostrar o no ciertas cosas si la BBDD esta vacia
+	full_BBDD = False
+	museums = Museums.objects.all()
+	if len(museums) != 0:
+		full_BBDD = True
+	return full_BBDD
+
 @csrf_exempt
 def home(request):
-	if request.method == 'GET':
+	if request.method == 'GET' or request.method == 'POST':
+		if request.method == 'POST':
+			# Al principio de todo es necesario restaurar la BBDD
+			d = Museums.objects.all()
+			d.delete()
+			XML = analyze_XML()
+
 		# Variable para mostrarla en el registration-box
 		user_login = request.user
-		
-		# Al principio de todo es necesario restaurar la BBDD
-		d = Museums.objects.all()
-		d.delete()
-		prueba = analyze_XML()
+
+		full_BBDD = show()
 
 		museums2show = None
 		string = ""
@@ -112,7 +120,7 @@ def home(request):
 			personal_pages += "<a href='/" + username + "'>" + title + "</a> | " + username + "<br/><br/>"
 		
 		return render_to_response('index.html', {'user': user_login, 'commented_museums': commented_museums, 'personal_pages': personal_pages, 
-												'str': string, 'button': button, 'museums2show': museums2show})
+												'str': string, 'button': button, 'museums2show': museums2show, 'full_BBDD': full_BBDD})
 	else:
 		response = "Method not allowed"
 		return HttpResponse(response, status = 405)
@@ -179,6 +187,8 @@ def user(request, name):
 def museums(request):
 	# Variable para mostrarla en el registration-box
 	user_login = request.user
+
+	full_BBDD = show()
 	
 	# Es necesario sacar una lista de los distritos 'unívocos' para pasarlo al formulario.
 	# Con el list(set()) lo que obtengo es los valores no repetidos de una lista.
@@ -189,7 +199,7 @@ def museums(request):
 
 	if request.method == 'GET':
 		museums = Museums.objects.all()
-		return render_to_response('museums.html', {'user': user_login, 'museums': museums, 'districts': districts}) 
+		return render_to_response('museums.html', {'user': user_login, 'museums': museums, 'districts': districts, 'full_BBDD': full_BBDD}) 
 	elif request.method == 'POST':
 		dm = request.POST['Option']
 		if dm == "Todos":

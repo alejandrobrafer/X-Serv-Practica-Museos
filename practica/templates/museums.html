@@ -12,6 +12,10 @@
 {% endblock %}
 
 
+<!-- Para que el formulario de actualizar solo se presente en home -->
+{% block submenu %}{% endblock %}
+
+
 <!-- En la página museos en el cuadrado de la izquierda, mostrará algo tipo descripcion, una poesia, una foto... -->
 {% block leftpanel %}
 	<center><img src="https://www.museosdemadrid.info/wp-content/uploads/2015/10/museo-del-prado-madrid-150x150.jpg" alt="URL caida." style="max-width:150%;width:auto;height:auto;" /></center>
@@ -20,39 +24,43 @@
 
 <!-- En la página museos en el cuadrado del centro, mostrará los museos y el formulario con el filtrado-->
 {% block contenttext %}
-<div> <style="padding:10px">
-	<span class="titletext">Museos</span>
-</style></div>
+	<div> <style="padding:10px">
+		<span class="titletext">Museos</span>
+	</style></div>
 
-<div class="bodytext" style="padding:12px;" align="justify">
-	<center><form method="POST" action="">
-		<select name="Option">
-			<option value="Todos" selected>Todos</option>
-			{% for district in districts %}
-				{% if district == "" %}
-					<option value="">----</option>
-				{% else %}
-					<option value="{{district | safe}}">{{district | safe}}</option>
-				{% endif %}
-			{% endfor %}
-		</select>
-		<input type="submit" value="Filtrar">
- 	</form></center><br/>
+	<div class="bodytext" style="padding:12px;" align="justify">
+		{% if full_BBDD %}	
+			<center><form method="POST" action="">
+				<select name="Option">
+					<option value="Todos" selected>Todos</option>
+					{% for district in districts %}
+						{% if district == "" %}
+							<option value="">----</option>
+						{% else %}
+							<option value="{{district | safe}}">{{district | safe}}</option>
+						{% endif %}
+					{% endfor %}
+				</select>
+				<input type="submit" value="Filtrar">
+		 	</form></center><br/>
 
-	
-	<table border=”0″ cellpadding=”1″ cellspacing="2" align="center" bordercolor="#F39C12">
-		<tr bgcolor= "#F39C12" >
-			<th><center><font face="verdana" color= #FFFFFF size= 2>Nombre</font></center></th>
-			<th><center><font face="verdana" color= #FFFFFF size= 2>Distrito</font></center></th>
-			<th><center><font face="verdana" color= #FFFFFF size= 2>Página</font></center></th>
-		<tr>
-		{% for museum in museums %}
-			<tr align="center">
-				<td nowrap>{{museum.Name | safe}}</td>
-				<td nowrap>{{museum.District | safe}}</td>
-				<td nowrap><a href='/museos/{{museum.id | safe}}'>Ir</a></td>
-			</tr>
-		{% endfor %}
-	</table>
-</div>	
+			
+			<table border=”0″ cellpadding=”1″ cellspacing="2" align="center" bordercolor="#F39C12">
+				<tr bgcolor= "#F39C12" >
+					<th><center><font face="verdana" color= #FFFFFF size= 2>Nombre</font></center></th>
+					<th><center><font face="verdana" color= #FFFFFF size= 2>Distrito</font></center></th>
+					<th><center><font face="verdana" color= #FFFFFF size= 2>Página</font></center></th>
+				<tr>
+				{% for museum in museums %}
+					<tr align="center">
+						<td>{{museum.Name | safe}}</td>
+						<td>{{museum.District | safe}}</td>
+						<td><a href='/museos/{{museum.id | safe}}'>Ir</a></td>
+					</tr>
+				{% endfor %}
+			</table>
+		{% else %}
+			<br/><center>Debido a que no se dispone de la BBDD, actualmente no podemos mostrar los museos. Vuelve a INICIO y actuliza la BBDD.</center><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/>
+		{% endif %}
+	</div>	
 {% endblock %}
