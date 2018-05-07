@@ -122,8 +122,7 @@ def home(request):
 		return render_to_response('index.html', {'user': user_login, 'commented_museums': commented_museums, 'personal_pages': personal_pages, 
 												'str': string, 'button': button, 'museums2show': museums2show, 'full_BBDD': full_BBDD})
 	else:
-		response = "Method not allowed"
-		return HttpResponse(response, status = 405)
+		return render_to_response('error.html', {'code': 405})
 
 
 def change_title(request, username):
@@ -154,9 +153,7 @@ def user(request, name):
 		try:
 			user = User.objects.get(username = name)
 		except User.DoesNotExist:
-			response = "User not exit"
-			# NOTA: Faltaria responder a través de un template de "Page Not Found"
-			return HttpResponseNotFound(response)
+			return render_to_response('error.html', {'code': 404})
 
 		# Bloque para cambiar el título 
 		title = change_title(request, user.username)
@@ -179,8 +176,7 @@ def user(request, name):
 			button = "<a href='/" + name + "?" + str(qs) + "'>" + "<button> Ver más </button>" + "</a><br>"
 		return render_to_response('user.html', {'user': user_login, 'user_page': user, 'museums': museums, 'title': title, 'button': button})
 	else:
-		response = "Method not allowed"
-		return HttpResponse(response, status = 405)
+		return render_to_response('error.html', {'code': 405})
 
 
 @csrf_exempt
@@ -208,8 +204,7 @@ def museums(request):
 			museums = Museums.objects.filter(District = dm)
 		return render_to_response('museums.html', {'user': user_login, 'museums': museums, 'districts': districts})  
 	else:
-		response = "Method not allowed"
-		return HttpResponse(response, status = 405)
+		return render_to_response('error.html', {'code': 405})
 
 
 @csrf_exempt
@@ -242,12 +237,9 @@ def museum_page(request, id):
 			comments = Comments.objects.filter(Museum = museum)
 			return render_to_response('museum_page.html', {'user': user_login, 'museum': museum, 'comments': comments, 'show_select': show_select})  
 		except Museums.DoesNotExist:
-			response = "Page not found"
-			# NOTA: Faltaria responder a través de un template de "Page Not Found"
-			return HttpResponseNotFound(response)
+			return render_to_response('error.html', {'code': 404})
 	else:
-		response = "Method not allowed"
-		return HttpResponse(response, status = 405)
+		return render_to_response('error.html', {'code': 405})
 
 
 def xml_user(request, name):
@@ -255,16 +247,13 @@ def xml_user(request, name):
 		try:
 			user = User.objects.get(username = name)
 		except User.DoesNotExist:
-			response = "User not exit"
-			# NOTA: Faltaria responder a través de un template de "Page Not Found"
-			return HttpResponseNotFound(response)
+			return render_to_response('error.html', {'code': 404})
 
 		selection = Selected.objects.filter(User = user)
 		# EL content_type = "text/xml" INDICA COMO QUIERO MOSTRAR LOS DATOS EN EL NAVEGADOR
 		return render_to_response('xml_user.xml', {'user': user, 'selection': selection}, content_type = "text/xml")
 	else:
-		response = "Method not allowed"
-		return HttpResponse(response, status = 405)
+		return render_to_response('error.html', {'code': 405})
 
 
 def about(request):
@@ -283,8 +272,7 @@ def login(request):
 			auth.login(request, user)
 		return HttpResponseRedirect("/")
 	else:
-		response = "Method not allowed"
-		return HttpResponse(response, status = 405)
+		return render_to_response('error.html', {'code': 405})
 
 
 @csrf_exempt
@@ -316,5 +304,4 @@ def define_style(request):
 		new_title.save()
 		return HttpResponseRedirect("/" + user_page.User)
 	else:
-		response = "Method not allowed"
-		return HttpResponse(response, status = 405)
+		return render_to_response('error.html', {'code': 405})
