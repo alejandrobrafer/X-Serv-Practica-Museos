@@ -32,7 +32,7 @@
 	 	</form><br/><br/>
 
 	 	{% if show_select %}
-		 	<center><span class="smalltitle">¿Te ha gustado?</span></center><br/>
+		 	<center><span class="smalltitle">¿Te interesa?</span></center><br/>
 		 	<form method="POST" action="/museos/{{museum.id| safe}} ">
 		 		<input type="checkbox" value="{{museum.Name}}" name="select" checked/>
 		    	<input type="submit" value=" Añadir " />

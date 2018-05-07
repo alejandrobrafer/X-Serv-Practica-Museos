@@ -1,0 +1,37 @@
+{% extends "index.html" %}
+
+
+<!-- Menú identificativo de las páginas a excepción de la de inicio. -->
+{% block menu %}
+	{% if user.is_authenticated %}
+		<a href="/">Inicio</a> | <a href="/about">About</a> | <a href="/museos">Todos</a> | <a href="/{{user.username}}">Página personal</a> | 
+		<a href="/{{user.username}}/xml" target="_blank">Canal XML</a>
+	{% else %}
+		<a href="/">Inicio</a> | <a href="/about">About</a> | <a href="/museos">Todos</a> 
+	{% endif %}
+{% endblock %}
+
+
+{% block submenu %}{% endblock %}
+
+<!-- En la página personal del usuario en el cuadrado de la izquierda, mostrará el formulario de la parte privada -->
+{% block leftpanel %}
+	<center><font face="Comic Sans MS" color= #FFFFFF size=3>Práctica realizada por <b>Alejandro Bravo Fernández</b> para la asignatura de Servicios de Servicios y Aplicaciones en Redes de Ordenadores.</font></center>
+{% endblock %}
+
+
+<!-- En la pagina principal en el cuadrado del centro, mostrará el listado con los museos comentados-->
+{% block contenttext %}
+	<div> <style="padding:10px">
+		<span class="titletext">About</span>
+	</style></div>
+
+	<div class="bodytext" style="padding:12px;" align="justify">
+		El propósito de la práctica ha sido la creación de una página web que permita aglutinar información sobre museos de la ciudad de Madrid. Para ello ha sido necesario descargar y filtrar la información, en formato XML, del portal de datos abiertos de Madrid y asi, ofrecer a los usuarios la posibilidad de seleccionar aquellos museos que más le interesen y comentar sobre ellos.
+
+		<br/><br/>En la página principal habrá un listado con el total de las páginas personales y un espacio donde se visualizarán los museos con más comentarios, pudiendo a través de un enlace mostrar los musesos accesibles y luego, todos. Además los usuarios podrán cargar el listado atual de los museos cuando lo estimen oportuno.
+		<br/><br/>Los usuarios se pueden registrar en la web y se les entregará un espacio en la misma donde podrán ver los museos que tienen seleccionados y también tendrán la posibilidad de personalizar el estilo de la página, cambiando el color de fondo y la letra así como de elegir el título de su página personal. Otros usuarios podrán ver sin estar registrados las páginas personales de los usuarios registrados.
+		<br/><br/>Además se mostrará un listado con todos los museos y un enlace a su página, pudiendo filtrarse por distrito.
+		<br/><br/>Por último, cada museo tendrá una página donde aparecerán los comentario de los usuarios registrados e información detallada del mismo, pudiendo añadirlo a nuestra página personal si nos pareciera interesante.
+	</div>
+{% endblock %}

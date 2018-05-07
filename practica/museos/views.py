@@ -202,7 +202,7 @@ def museums(request):
 			museums = Museums.objects.all()
 		else:
 			museums = Museums.objects.filter(District = dm)
-		return render_to_response('museums.html', {'user': user_login, 'museums': museums, 'districts': districts})  
+		return render_to_response('museums.html', {'user': user_login, 'museums': museums, 'districts': districts, 'full_BBDD': full_BBDD})  
 	else:
 		return render_to_response('error.html', {'code': 405})
 
@@ -257,8 +257,10 @@ def xml_user(request, name):
 
 
 def about(request):
-	#NOTA: Falta por hacer
-	return HttpResponse("About")
+	if request.method == 'GET':
+		return render_to_response('about.html')
+	else:
+		return render_to_response('error.html', {'code': 405})
 
 
 @csrf_exempt
