@@ -9,8 +9,10 @@
 	<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
 	<link rel="stylesheet" href="templates/style.css" type="text/css" />
 	<title>Museos | SARO 2018</title>
-
-	<link rel="shortcut icon" type="image/x-icon" href="templates/images/favicon.ico">
+	<!--NOTA: visualizar en Safari-->
+	<link rel="icon" type="image/x-icon" href="templates/favicon.ico">
+	<!--NOTA: visualizar en Firefox-->
+	<link rel="shortcut icon" type="image/x-icon" href="templates/favicon.ico">
 </head>
 
 
@@ -66,7 +68,11 @@
 			<div id="menu">
 				<div align="center" class="smallwhitetext" style="padding:9px;">
 					{% block menu %}
-						<a href="/about">About</a> | <a href="/museos">Todos</a>
+						{% if user.is_authenticated %}
+							<a href="/about">About</a> | <a href="/museos">Todos</a> | <a href="/{{user.username}}">Página personal</a> | <a href="/{{user.username}}/xml" target="_blank">Mi canal XML</a>
+						{% else %}
+							<a href="/about">About</a> | <a href="/museos">Todos</a>
+						{% endif %}
 					{% endblock %}
 				</div>
 			</div>
