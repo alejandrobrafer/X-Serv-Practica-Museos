@@ -112,14 +112,12 @@ def home(request):
 		# 2/ Listado con enlaces a las páginas personales
 		personal_pages = ""
 		pages = User_Page.objects.all()
-		print("aqui")
 		for name in pages:
 			username = name.User
 			title = name.Title
 			if not title:
 				title = "Página de " + username
 			personal_pages += "<a href='/" + username + "'>" + title + "</a> | " + username + "<br/><br/>"
-			print(personal_pages)
 		
 		return render_to_response('index.html', {'user': user_login, 'commented_museums': commented_museums, 'personal_pages': personal_pages, 
 												'str': string, 'button': button, 'museums2show': museums2show, 'full_BBDD': full_BBDD})
