@@ -231,11 +231,21 @@ def museum_page(request, id):
 					museum = Museums.objects.get(Name = deleted)
 					instance = Selected.objects.get(Museum = museum, User = user_login)
 					instance.delete()
-
+				elif 'score' in request.POST:
+					# Al intenrarlo con otra tabla el error es al seleccionar el id (no es el mismo en las tablas)
+					scored = request.POST['score']
+					museum = Museums.objects.get(Name = scored)
+					if museum.Scored == None:
+						museum.Scored = 1
+					else:
+						museum.Scored += 1
+					museum.save()
+				
 			# Bloque para determinar si puedo añadir/eliminar o no el museo a un usuario
 			show_select = True	
 			selections = Selected.objects.filter(User = user_login)
 			for selection in selections:
+				# No puede seleccionar algo seleccionado
 				if museum.Name == selection.Museum.Name:
 					show_select = False
 

@@ -41,6 +41,7 @@ class Migration(migrations.Migration):
                 ('Length', models.FloatField(blank=True, null=True)),
                 ('Phone', models.TextField(blank=True, null=True)),
                 ('Email', models.TextField(blank=True, null=True)),
+                ('Scored', models.PositiveIntegerField(blank=True, null=True)),
             ],
         ),
         migrations.CreateModel(

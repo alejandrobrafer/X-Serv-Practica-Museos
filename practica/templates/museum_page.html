@@ -23,6 +23,13 @@
 	{% for comment in comments %}
 		<center><font face="courier new" color= #626567 size=2>"<i>{{comment.Commentary | safe}}"</i></font></center><br/>
 	{% endfor %}
+	-------------------------------------------
+	<span class="smalltitle">Te gusta</span><br/><font face="courier new" color= #FFFFFF size=1>(puntuación total: {{museum.Scored | safe}})</font>
+	<form method="POST" action="/museos/{{museum.id | safe}} ">
+		<input type="checkbox" value="{{museum.Name}}" name="score" checked/>
+	   	<input type="submit" value=" ¡Si! " />
+		<br/><br/>
+	</form><br/>
 
 	{% if user.is_authenticated %}
 		<form method="POST" action="">
@@ -32,7 +39,7 @@
 	 	</form><br/><br/>
 
 	 	{% if show_select %}
-		 	<center><span class="smalltitle">¿Te interesa?</span></center><br/>
+		 	<span class="smalltitle">Te interesa</span></center>
 		 	<form method="POST" action="/museos/{{museum.id | safe}} ">
 		 		<input type="checkbox" value="{{museum.Name}}" name="select" checked/>
 		    	<input type="submit" value=" Añadir " />
@@ -76,6 +83,13 @@
 		El museo es <b>ACCESIBLE</b>
 	{% else %}
 		El museo es <b>NO ACCESIBLE</b>
+	{% endif %}<br/><br/>
+	<b>El museo cuenta con una puntuación total de  </b>
+	{% if museum.Scored == None %}
+		0
+	{% else %}
+		{{museum.Scored | safe}}
 	{% endif %}
+
 </div>
 {% endblock %}

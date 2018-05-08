@@ -26,6 +26,7 @@ class Museums(models.Model):
 	Length = models.FloatField(null = True, blank = True)
 	Phone = models.TextField(null = True, blank = True)
 	Email = models.TextField(null = True, blank = True)
+	Scored = models.PositiveIntegerField(null = True, blank = True)
 	def __str__(self):
 		return self.Name
 
