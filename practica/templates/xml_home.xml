@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<contenidos>
+	<infoDataset>
+		<nombre>Página principal</nombre>
+		<descripcion> Canal XML para mostrar el contenido de la pagina principal</descripcion>
+	</infoDataset>
+	<contenido>
+		
+		<!-- 5 museos con más comentario -->
+		{% for comment in commented_museums %}
+			{% if comment.num_comments > 0 %}
+				<atributos idioma="en">
+					<atributo name = "NAME">{{ comment.Name }}</atributo>
+					<atributo name = "STREET_NAME">{{ comment.Street_Name }}</atributo>
+					<atributo name = "STREET_TYPE">{{ comment.Street_Type }}</atributo>
+					<atributo name = "STREET_NUM">{{ comment.Street_Num }}</atributo>
+					<atributo name = "LINK">localhost:8000/museos/{{ comment.id }}</atributo>
+				</atributos>
+			{% endif %}
+		{% endfor %}
+
+		<!-- Páginas personales -->
+		{% for personal_page in personal_pages %}
+			<atributos idioma="en">
+				<atributo name = "USER">{{ personal_page.User }}</atributo>
+				{% if not personal_page.Title %}
+					<atributo name = "TITLE">Página de {{ personal_page.User }}</atributo>
+				{% else %}
+					<atributo name = "TITLE">{{ personal_page.Title }}</atributo>
+				{% endif %}
+			</atributos>
+		{% endfor %}
+
+
+	</contenido>
+</contenidos>

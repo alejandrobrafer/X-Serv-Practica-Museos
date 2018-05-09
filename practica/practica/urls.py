@@ -30,6 +30,7 @@ urlpatterns = [
 	url(r'^museos/(\d+)$', 'museos.views.museum_page', name = "Página del museo."),
 	url(r'^museos$', 'museos.views.museums', name = "Listado con todos los museos."),
 	url(r'^$', 'museos.views.home', name = "Página principal"),
+     url(r'^home/xml$', 'museos.views.xml_home', name = "Canal XML de la página principal."),
     url(r'^(.+)/xml$', 'museos.views.xml_user', name = "Canal XML del usuario."),
     url(r'templates/(?P<path>.*)$',  serve, {'document_root': settings.STATIC_URL}),
     url(r'^(.+)$', 'museos.views.user', name = "Página del usuario."),

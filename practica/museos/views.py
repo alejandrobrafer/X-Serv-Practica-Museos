@@ -125,6 +125,15 @@ def home(request):
 		return render_to_response('error.html', {'code': 405})
 
 
+def xml_home(request):
+	if request.method == 'GET':
+		commented_museums = Museums.objects.annotate(num_comments = Count('comments')).order_by('-num_comments')[:5]
+		personal_pages = User_Page.objects.all()
+		return render_to_response('xml_home.xml', {'commented_museums': commented_museums, 'personal_pages': personal_pages}, content_type = "text/xml")
+	else:
+		return render_to_response('error.html', {'code': 405})
+
+
 def change_title(request, username):
 	if request.method == 'POST':
 		title = request.POST['title']
