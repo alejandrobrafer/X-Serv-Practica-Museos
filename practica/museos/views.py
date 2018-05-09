@@ -129,7 +129,10 @@ def xml_home(request):
 	if request.method == 'GET':
 		commented_museums = Museums.objects.annotate(num_comments = Count('comments')).order_by('-num_comments')[:5]
 		personal_pages = User_Page.objects.all()
-		return render_to_response('xml_home.xml', {'commented_museums': commented_museums, 'personal_pages': personal_pages}, content_type = "text/xml")
+		accessibility_museums = Museums.objects.filter(Accessibility = 1)
+		museums = Museums.objects.all()
+		return render_to_response('xml_home.xml', {'commented_museums': commented_museums, 'personal_pages': personal_pages, 
+													'accessibility_museums': accessibility_museums, 'museums': museums}, content_type = "text/xml")
 	else:
 		return render_to_response('error.html', {'code': 405})
 

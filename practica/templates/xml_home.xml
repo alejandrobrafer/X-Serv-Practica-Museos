@@ -10,7 +10,7 @@
 		<!-- 5 museos con más comentario -->
 		{% for comment in commented_museums %}
 			{% if comment.num_comments > 0 %}
-				<atributos idioma="en">
+				<atributos idioma="en" name = "MUSEO_COMENTADO">
 					<atributo name = "NAME">{{ comment.Name }}</atributo>
 					<atributo name = "STREET_NAME">{{ comment.Street_Name }}</atributo>
 					<atributo name = "STREET_TYPE">{{ comment.Street_Type }}</atributo>
@@ -22,7 +22,7 @@
 
 		<!-- Páginas personales -->
 		{% for personal_page in personal_pages %}
-			<atributos idioma="en">
+			<atributos idioma="en"  name = "PAG_PERSONAL">
 				<atributo name = "USER">{{ personal_page.User }}</atributo>
 				{% if not personal_page.Title %}
 					<atributo name = "TITLE">Página de {{ personal_page.User }}</atributo>
@@ -32,6 +32,19 @@
 			</atributos>
 		{% endfor %}
 
+		<!-- Museos accesibles -->
+		<atributos idioma="en" name = "MUSEO_ACCESIBLE">	
+			{% for accessibility_museum in accessibility_museums %}
+				<atributo name = "NAME">{{ accessibility_museum.Name }}</atributo>
+			{% endfor %}
+		</atributos>
+
+		<!-- Todos los museos -->
+		<atributos idioma="en" name = "MUSEO">
+			{% for museum in museums %}
+				<atributo name = "NAME">{{ museum.Name }}</atributo>
+			{% endfor %}
+		</atributos>
 
 	</contenido>
 </contenidos>
