@@ -20,7 +20,7 @@ from django.contrib.auth.views import logout
 
 
 urlpatterns = [
-    # https://docs.djangoproject.com/en/1.8/_modules/django/contrib/auth/views/
+    url(r'^update_password$', 'museos.views.password', name='Función para actualizar la contraseña'),
     url(r'^register$', 'museos.views.register', name = "Función que proporciona el registro"),
     url(r'^logout$', logout, {'next_page': '/'}),
     url(r'^login$', 'museos.views.login', name = "Función que proporciona el logeado"),
@@ -30,7 +30,7 @@ urlpatterns = [
 	url(r'^museos/(\d+)$', 'museos.views.museum_page', name = "Página del museo."),
 	url(r'^museos$', 'museos.views.museums', name = "Listado con todos los museos."),
 	url(r'^$', 'museos.views.home', name = "Página principal"),
-     url(r'^home/xml$', 'museos.views.xml_home', name = "Canal XML de la página principal."),
+    url(r'^home/xml$', 'museos.views.xml_home', name = "Canal XML de la página principal."),
     url(r'^(.+)/xml$', 'museos.views.xml_user', name = "Canal XML del usuario."),
     url(r'templates/(?P<path>.*)$',  serve, {'document_root': settings.STATIC_URL}),
     url(r'^(.+)$', 'museos.views.user', name = "Página del usuario."),

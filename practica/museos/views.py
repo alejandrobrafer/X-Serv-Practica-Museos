@@ -15,7 +15,6 @@ from xml.dom import minidom
 
 def analyze_XML():
  	# http://www.decodigo.com/python-leer-archivo-xml
-	# Nota: Abra una parte con el filtrado del XML de Museos de Madrid.
 	doc = urllib.request.urlopen('https://datos.madrid.es/portal/site/egob/menuitem.ac61933d6ee3c31cae77ae7784f1a5a0/?vgnextoid=00149033f2201410VgnVCM100000171f5a0aRCRD&format=xml&file=0&filename=201132-0-museos&mgmtid=118f2fdbecc63410VgnVCM1000000b205a0aRCRD&preview=full')
 	dom = minidom.parse(doc)
 
@@ -64,10 +63,16 @@ def analyze_XML():
 			value_email = attribute.firstChild.data
 		# Dado que TIPO es la ultima etiqueta del XML, aprovecho y guardo
 		elif item == "TIPO":
-			new_museum = Museums(Name = value_name, Description = value_description, Schedule = value_schedule, Transport = value_transport, Accessibility = value_accessibility, URL = value_url, Street_Name = value_street_name, Street_Type = value_street_type, Street_Num = value_street_num, Locality = value_locality, Province = value_province, Postal_Code = value_postal_code, Neighborhood = value_neighborhood, District = value_district, Coor_X = value_x, CoorY = value_y, Latitude =  value_latitude, Length = value_length, Phone = value_phone, Email = value_email)
+			new_museum = Museums(Name = value_name, Description = value_description, Schedule = value_schedule, 
+								Transport = value_transport, Accessibility = value_accessibility, URL = value_url,
+								Street_Name = value_street_name, Street_Type = value_street_type, Street_Num = value_street_num,
+								Locality = value_locality, Province = value_province, Postal_Code = value_postal_code, 
+								Neighborhood = value_neighborhood, District = value_district, Coor_X = value_x, CoorY = value_y, 
+								Latitude =  value_latitude, Length = value_length, Phone = value_phone, Email = value_email)
 			new_museum.save()
 		else:
 			pass
+
 
 def show():	
 	# Utilizado para mostrar o no ciertas cosas si la BBDD esta vacia
@@ -76,6 +81,7 @@ def show():
 	if len(museums) != 0:
 		full_BBDD = True
 	return full_BBDD
+
 
 @csrf_exempt
 def home(request):
@@ -150,6 +156,7 @@ def change_title(request, username):
 		if not user_page.Title:
 			title = "Página de " + user_page.User
 		return title
+
 
 @csrf_exempt
 def user(request, name):
@@ -329,6 +336,22 @@ def register(request):
 	elif request.method == 'GET':
 		show_record = True
 		return render_to_response('index.html', {'show_record': show_record})
+	else:
+		return render_to_response('error.html', {'code': 405})
+
+
+@csrf_exempt
+def password(request):
+    # http://librosweb.es/libro/django_1_0/capitulo_12/utilizando_usuarios.html 
+	if request.method == 'POST':
+		user = User.objects.get(username = request.user.username)
+		new_password = request.POST['password']
+		user.set_password(new_password)
+		user.save()
+		return HttpResponseRedirect("/")
+	elif request.method == 'GET':
+		show_pass = True
+		return render_to_response('index.html', {'show_pass': show_pass})
 	else:
 		return render_to_response('error.html', {'code': 405})
 
