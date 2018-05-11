@@ -292,7 +292,9 @@ def xml_user(request, name):
 
 def about(request):
 	if request.method == 'GET':
-		return render_to_response('about.html')
+		# Variable para mostrarla en el registration-box
+		user_login = request.user
+		return render_to_response('about.html', {'user': user_login})
 	else:
 		return render_to_response('error.html', {'code': 405})
 
