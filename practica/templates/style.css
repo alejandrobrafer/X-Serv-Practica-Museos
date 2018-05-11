@@ -15,7 +15,7 @@ body {
 #contenttext{float:right; width:526px; background-color:{{ background_color }};}
 #leftpanel{float:left; width:270px;}
 #footer{float:left; width:780px; background-color:#F0F0F0; padding:10px;}
-#map {width: 100%; height: 200px; border-radius: 15px; border: #D35400 5px groove;}
+#map {width: 100%; height: 200px; border-radius: 15px; border: #F39C12 5px groove;}
 
 /*GRAY PANEL*/
 .graypanel{

@@ -17,9 +17,11 @@ from django.contrib import admin
 from django.views.static import *
 from practica import settings
 from django.contrib.auth.views import logout
+from museos.feed import Feeds
 
 
 urlpatterns = [
+    url(r'^feeds$', Feeds()),
     url(r'^update_password$', 'museos.views.password', name='Función para actualizar la contraseña'),
     url(r'^register$', 'museos.views.register', name = "Función que proporciona el registro"),
     url(r'^logout$', logout, {'next_page': '/'}),

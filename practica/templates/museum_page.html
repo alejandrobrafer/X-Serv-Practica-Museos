@@ -5,9 +5,9 @@
 {% block menu %}
 	{% if user.is_authenticated %}
 		<a href="/">Inicio</a> | <a href="/about">About</a> | <a href="/museos">Todos</a> | <a href="/{{user.username}}">Página personal</a> | 
-		<a href="/{{user.username}}/xml" target="_blank">Mi canal XML</a>
+		<a href="/{{user.username}}/xml" target="_blank">Mi canal XML</a> | <a href="/feeds" target="_blank">Canal RSS</a>
 	{% else %}
-		<a href="/">Inicio</a> | <a href="/about">About</a> | <a href="/museos">Todos</a>
+		<a href="/">Inicio</a> | <a href="/about">About</a> | <a href="/museos">Todos</a> | <a href="/feeds" target="_blank">Canal RSS</a>
 	{% endif %}
 {% endblock %}
 
@@ -103,13 +103,13 @@
 	{% else %}
 		El museo es <b>NO ACCESIBLE</b>
 	{% endif %}<br/><br/>
-	<center><h3><b>* El museo cuenta con una puntuación total de  </b>
+	<center><h3><font color= #F39C12>* El museo cuenta con una puntuación total de 
 	{% if museum.Scored == None %}
 		0
 	{% else %}
 		{{museum.Scored | safe}}
 	{% endif %}
-	</h3></center>
+	</font></h3></center>
 
 </div>
 {% endblock %}

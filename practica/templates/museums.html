@@ -5,9 +5,9 @@
 {% block menu %}
 	{% if user.is_authenticated %}
 		<a href="/">Inicio</a> | <a href="/about">About</a> | <a href="/museos">Todos</a> | <a href="/{{user.username}}">Página personal</a> | 
-		<a href="/{{user.username}}/xml" target="_blank">Mi canal XML</a>
+		<a href="/{{user.username}}/xml" target="_blank">Mi canal XML</a> | <a href="/feeds" target="_blank">Canal RSS</a>
 	{% else %}
-		<a href="/">Inicio</a> | <a href="/about">About</a> | <a href="/museos">Todos</a>
+		<a href="/">Inicio</a> | <a href="/about">About</a> | <a href="/museos">Todos</a> | <a href="/feeds" target="_blank">Canal RSS</a>
 	{% endif %}
 {% endblock %}
 
