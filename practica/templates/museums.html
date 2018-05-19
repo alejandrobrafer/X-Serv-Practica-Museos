@@ -49,13 +49,11 @@
 			<table border=”0″ cellpadding=”1″ cellspacing="2" align="center" bordercolor="#F39C12">
 				<tr bgcolor= "#F39C12" >
 					<th><center><font face="verdana" color= #FFFFFF size= 2>Nombre</font></center></th>
-					<th><center><font face="verdana" color= #FFFFFF size= 2>Distrito</font></center></th>
 					<th><center><font face="verdana" color= #FFFFFF size= 2>Página</font></center></th>
 				<tr>
 				{% for museum in museums %}
 					<tr align="center">
 						<td>{{museum.Name | safe}}</td>
-						<td>{{museum.District | safe}}</td>
 						<td><a href='/museos/{{museum.id | safe}}'>Ir</a></td>
 					</tr>
 				{% endfor %}

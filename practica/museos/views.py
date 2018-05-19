@@ -88,7 +88,7 @@ def change_title(request, username):
 	if request.method == 'POST':
 		title = request.POST['title']
 		user_page = User_Page.objects.get(User = username)
-		new_title = User_Page(id = user_page.id, User = user_page.User, Title = title)
+		new_title = User_Page(id = user_page.id, User = user_page.User, Title = title, Font = user_page.Font, Background_Color = user_page.Background_Color)
 		new_title.save()
 		return new_title.Title
 	elif request.method == 'GET':

@@ -125,7 +125,7 @@
 								{% for commented_museum in commented_museums %}
 									{% if commented_museum.num_comments > 0 %}
 										<tr align="center">
-											<td nowrap><a href='{{commented_museum.URL | safe}}' target="_blank">{{commented_museum.Name | safe}}</a></td>
+											<td><a href='{{commented_museum.URL | safe}}' target="_blank">{{commented_museum.Name | safe}}</a></td>
 											{% if commented_museum.Street_Num %}
 												<td>{{commented_museum.Street_Type | safe}} {{commented_museum.Street_Name | safe}} 
 												{{commented_museum.Street_Num | safe}}</td>
@@ -151,7 +151,7 @@
 						{% elif show_record %}
 							<center>Te estamos esperando!<br/></center>Es hora de que te registres en la página y disfrutes del todo contenido que tenemos para ti.
 						{% else %}
-							Sorry... Ahora mismo la BBDD se enceuntra vacía y no tenemos museos para mostrarte. Si lo deseea pulse el botón de arriba y se iniciará la actualización... Que disfrute!<br/><br/><br/>
+							Sorry... Ahora mismo la BBDD se enceuntra vacía y no tenemos museos para mostrarte. Si lo deseea pulse el botón de arriba y se iniciará la actualización... Que disfrute!<br/><br/><br/><br/>
 						{% endif %}
 					</div>	
 
