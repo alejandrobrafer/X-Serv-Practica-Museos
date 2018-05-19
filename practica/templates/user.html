@@ -15,10 +15,11 @@
 	<a href="/{{user_page}}/xml" target="_blank"><button>Canal XML</button></a>
 {% endblock %}
 
-<!-- En la página personal del usuario en el cuadrado de la izquierda, mostrará el formulario de la parte privada -->
+
+<!-- En la página personal del usuario en el cuadrado de la izquierda, mostrará los formularios de la parte privada -->
 {% block leftpanel %}
 	{% if user.is_authenticated and user == user_page %}	
-	<center><span class = "smalltitle"><u>Ponlo a tu gusto</u></span></center><br/>
+		<center><span class = "smalltitle"><u>Ponlo a tu gusto</u></span></center><br/>
 		<center><font face="Comic Sans MS" color= #666666 size= 2> * Personaliza el título</font></center>
 		<form method = "POST" action = "">
 		    <input type = "text" name = 'title' placeholder = "Escribe aquí el título" />
@@ -61,7 +62,7 @@
 {% endblock %}
 
 
-<!-- En la pagina principal en el cuadrado del centro, mostrará el listado con los museos comentados-->
+<!-- En la pagina principal en el cuadrado del centro, mostrará los museos añadidos de cinco en cinco.-->
 {% block contenttext %}
 	<div> <style="padding:10px">
 		<span class="titletext">{{title | safe}}</span>
@@ -98,7 +99,8 @@
 	{% else %}
 		<div class="bodytext" style="padding:12px;" align="justify">
 			<br/><br/><br/><b>Ups...Sorry!<br/><br/>
-			Estoy buscando cuales son los museos que más me interesan, pronto tendre una selección que te va a encantar.Hasta pronto!<b><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/>
+			Estoy buscando cuales son los museos que más me interesan, pronto tendre una selección que te va a encantar.Hasta pronto!<b><br/><br/><br/>
+			<br/><br/><br/><br/><br/><br/>
 		</div>
 	{% endif %}
 {% endblock %}

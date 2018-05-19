@@ -7,7 +7,7 @@
 	</infoDataset>
 	<contenido>
 		
-		<!-- 5 museos con más comentario -->
+		<!-- Los cinco museos con más comentario -->
 		{% for comment in commented_museums %}
 			{% if comment.num_comments > 0 %}
 				<atributos idioma="en" name = "MUSEO_COMENTADO">
@@ -32,7 +32,7 @@
 			</atributos>
 		{% endfor %}
 
-		<!-- Museos accesibles -->
+		<!-- Todos los museos accesibles -->
 		<atributos idioma="en" name = "MUSEO_ACCESIBLE">	
 			{% for accessibility_museum in accessibility_museums %}
 				<atributo name = "NAME">{{ accessibility_museum.Name }}</atributo>

@@ -1,8 +1,11 @@
+# Fichero para la parte opcional de generación de un canal RSS para los comentarios puestos en el sitio.
+# NOTA: Para realizarlo me he apoyado en la información ofrecida en los siguientes enlaces:
+   # https://www.tutorialspoint.com/django/django_rss.htm
+   #https://www.youtube.com/watch?v=iqZIT_ke2OI
 from django.contrib.syndication.views import Feed
 from museos.models import Comments
 
-# https://www.tutorialspoint.com/django/django_rss.htm
-#https://www.youtube.com/watch?v=iqZIT_ke2OI
+
 class Feeds(Feed):
    title = "Comentarios Museo | SARO 2018"
    link = ""
@@ -18,5 +21,5 @@ class Feeds(Feed):
       return item.Commentary
 		
    def item_link(self, item):
-      link = '/museos/' + str(item.Museum.id)
+      link = '/museos/' + str(item.Museum.id) # Enlace para ir a la página del museo.
       return link

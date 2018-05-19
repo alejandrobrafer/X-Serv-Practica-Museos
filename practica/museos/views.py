@@ -1,11 +1,9 @@
 # Create your views here.
-
 from django.shortcuts import render_to_response
 from django.http import HttpResponse, HttpResponseNotFound, HttpResponseRedirect
 from django.views.decorators.csrf import csrf_exempt
 from museos.models import Museums, Selected, Comments, User_Page, Scored
 from django.contrib.auth.models import User
-# Museos con más comentario: https://docs.djangoproject.com/en/2.0/topics/db/aggregation/
 from django.db.models import Count
 from django.contrib import auth
 import time
@@ -13,7 +11,6 @@ from museos.analyze import analyze_XML
 
 
 def show():	
-	# Utilizado para mostrar o no ciertas cosas si la BBDD esta vacia
 	full_BBDD = False
 	museums = Museums.objects.all()
 	if len(museums) != 0:
@@ -21,39 +18,33 @@ def show():
 	return full_BBDD
 
 
-@csrf_exempt
 def home(request):
-	if request.method == 'GET' or request.method == 'POST':
-		if request.method == 'POST' and "update_BBDD" in request.POST:
-			# Al principio de todo es necesario restaurar la BBDD
-			d = Museums.objects.all()
-			d.delete()
-			XML = analyze_XML()
-
-		# Variable para mostrarla en el registration-box
+	if request.method == 'GET':
+		# Variable para mostrarla en el 'registration_box' en el caso de que el usuario esté registrado.
 		user_login = request.user
 
+		# Variable para mostrarla o no un aspecto u otro en el caso de que la BBDD esté o no vacía.
 		full_BBDD = show()
 
 		museums2show = None
 		string = ""
-		# Obtención de la Query String: https://docs.djangoproject.com/en/1.8/ref/request-response/
+		# NOTA: Obtención de la Query String: https://docs.djangoproject.com/en/1.8/ref/request-response/
 		qs = request.META['QUERY_STRING']
-		# 1/ Listado de los 5 museos con más comentario: https://docs.djangoproject.com/en/2.0/topics/db/aggregation/
-		# Con el annotate(num_comments) es como si "añadieramos" a la tabla Museums un nuevo campo denominado 'num_comments'
+		# NOTA: Información para sacar el listado de los 5 museos con más comentario: https://docs.djangoproject.com/en/2.0/topics/db/aggregation/
+			# Con el annotate(num_comments) es como si "añadieramos" a la tabla 'Museums' un nuevo campo denominado 'num_comments'.
 		commented_museums = Museums.objects.annotate(num_comments = Count('comments')).order_by('-num_comments')[:5]
-		button = "<a href='/?ACCESIBLES'>" + "<button> ... </button>" + "</a><br>"
+		button = "<a href='/?ACCESIBLES'>" + "<button> Accesibles </button>" + "</a><br>"
 		if qs == "ACCESIBLES":
 			string = "<i>¿Te apetece salir de museos por Madrid?</i> A continuación, se muestra una lista con todos los museos accedibles en este momento."
 			museums2show = Museums.objects.filter(Accessibility = 1)
-			button = "<a href='/?TODOS'>" + "<button> ... </button>" + "</a><br>"
+			button = "<a href='/?TODOS'>" + "<button> Todos </button>" + "</a><br>"
 		elif qs == "TODOS":
 			# NOTA: Supongo que tras terminar de mostrar todos los museos, no aparecerá ningun botón con enlace.
 			string = "Estos son todos los museos que tenemos en la BBDD en este momento. Espero que encuentres lo que busques."
 			museums2show = Museums.objects.all()
 			button = None
 
-		# 2/ Listado con enlaces a las páginas personales
+		# Bloque para sacar el listado con enlaces a las páginas personales.
 		personal_pages = ""
 		pages = User_Page.objects.all()
 		for name in pages:
@@ -65,6 +56,18 @@ def home(request):
 		
 		return render_to_response('index.html', {'user': user_login, 'commented_museums': commented_museums, 'personal_pages': personal_pages, 
 												'str': string, 'button': button, 'museums2show': museums2show, 'full_BBDD': full_BBDD})
+	else:
+		return render_to_response('error.html', {'code': 405})
+
+
+@csrf_exempt
+def BBDD(request):
+	if request.method == 'POST' and "update_BBDD" in request.POST:
+		# Al principio de todo es necesario restaurar la BBDD, para no repetir museos.
+		d = Museums.objects.all()
+		d.delete()
+		XML = analyze_XML()
+		return HttpResponseRedirect('/')
 	else:
 		return render_to_response('error.html', {'code': 405})
 
@@ -85,7 +88,7 @@ def change_title(request, username):
 	if request.method == 'POST':
 		title = request.POST['title']
 		user_page = User_Page.objects.get(User = username)
-		new_title = User_Page(id = user_page.id, User = user_page.User, Title = title, Font = user_page.Font, Background_Color = user_page.Background_Color)
+		new_title = User_Page(id = user_page.id, User = user_page.User, Title = title)
 		new_title.save()
 		return new_title.Title
 	elif request.method == 'GET':
@@ -98,13 +101,8 @@ def change_title(request, username):
 
 @csrf_exempt
 def user(request, name):
-	# NOTA IMPORTANTE: HE REALIZADO LA DISTINCION DE TRES 'TIPO DE USUARIO':
-	# 1.-LOS USUARIOS REGISTRADOS
-	# 2.-LOS USUARIOS QUE TIENEN PAGINA PERSONAL
-	# 3.- LOS USUARIOS LOGEADOS
-
-	if request.method == 'GET' or request.method == 'POST':	
-		# Variable para mostrarla en el registration-box
+	if request.method == 'GET' or request.method == 'POST':	# El 'POST' es necesario para el bloque de cambiar el título.
+		# Variable para mostrarla en el 'registration_box' en el caso de que el usuario esté registrado.
 		user_login = request.user
 
 		try:
@@ -115,17 +113,17 @@ def user(request, name):
 		# Bloque para cambiar el título 
 		title = change_title(request, user.username)
 
-		# Query String: https://docs.djangoproject.com/en/1.8/ref/request-response/
+		# NOTA: Obtención de la Query String: https://docs.djangoproject.com/en/1.8/ref/request-response/
 		qs = request.META['QUERY_STRING']
 		if qs == "":
 			qs = 0
-			# 1 usuario = 1 museo seleccionado --> museo = usuario
+			# Un usuario sólo puede seleccionar una vez el museo --> ese control lo realizo en la página del museo (show_select)
 			museums = Selected.objects.filter(User = user).order_by('-User')[qs:((qs + 1) * 5)]
 		else:
 			qs = int(qs)
 			museums = Selected.objects.filter(User = user)[(qs * 5):((qs + 1) * 5)]
 
-		#¿Necesito mostrar más?
+		# ¿Necesito mostrar más?
 		more_museums = Selected.objects.filter(User = user)[((qs + 1) * 5):]
 		button = None 
 		if len(more_museums) > 0:
@@ -138,16 +136,17 @@ def user(request, name):
 
 @csrf_exempt
 def museums(request):
-	# Variable para mostrarla en el registration-box
+	# Variable para mostrarla en el 'registration_box' en el caso de que el usuario esté registrado.
 	user_login = request.user
 
+	# Variable para mostrarla o no un aspecto u otro en el caso de que la BBDD esté o no vacía.
 	full_BBDD = show()
 	
-	# Es necesario sacar una lista de los distritos 'unívocos' para pasarlo al formulario.
-	# Con el list(set()) lo que obtengo es los valores no repetidos de una lista.
-	# value_list: https://docs.djangoproject.com/en/2.0/ref/models/querysets/
+	# NOTA: Es necesario sacar una lista de los distritos 'unívocos' para pasarlo al formulario. 
+		# Gracias al list(set()) lo que obtengo es los valores no repetidos de una lista. 
+	# NOTA: La informacion de la lista de valores la saqué de https://docs.djangoproject.com/en/2.0/ref/models/querysets/
 	districts = list(set(Museums.objects.all().values_list('District')))
-	# https://stackoverflow.com/questions/10941229/convert-list-of-tuples-to-list
+	# NOTA: Es necesario cambiar las tuplas a listas para el desplegable https://stackoverflow.com/questions/10941229/convert-list-of-tuples-to-list
 	districts = [districts[0] for districts in districts]
 
 	if request.method == 'GET':
@@ -166,38 +165,22 @@ def museums(request):
 
 @csrf_exempt
 def museum_page(request, id):
-	if request.method == 'GET' or request.method == 'POST':
-		# Variable para mostrarla en el registration-box
+	if request.method == 'GET':
+		# Variable para mostrarla en el 'registration_box' en el caso de que el usuario esté registrado.
 		user_login = request.user
 
 		try:
 			museum = Museums.objects.get(id = id)
-			if request.method == 'POST':
-				if 'comment' in request.POST:
-					comment = request.POST['comment']
-					new_comment = Comments(Museum = museum,  Commentary = comment)
-					new_comment.save()
-				elif 'select' in request.POST:
-					selection = request.POST['select']
-					museum = Museums.objects.get(Name = selection)
-					date = time.strftime("%d/%m/%y")
-					new_selection = Selected(Museum = museum, User = user_login, Date = date)
-					new_selection.save()
-				elif 'delete' in request.POST:
-					deleted = request.POST['delete']
-					museum = Museums.objects.get(Name = deleted)
-					instance = Selected.objects.get(Museum = museum, User = user_login)
-					instance.delete()
 
 			# Bloque para sacar la puntuación total del museo en cuestión.
 			scored_list = Scored.objects.filter(Museum = museum)
 			scored = len(scored_list)
 				
-			# Bloque para determinar si puedo añadir/eliminar o no el museo a un usuario
+			# Variable para mostrarla si el usuario puede añadir o eliminar la selección de un museo.
 			show_select = True	
 			selections = Selected.objects.filter(User = user_login)
 			for selection in selections:
-				# No puede seleccionar algo seleccionado
+				# No puede seleccionar algo seleccionado.
 				if museum.Name == selection.Museum.Name:
 					show_select = False
 
@@ -206,6 +189,49 @@ def museum_page(request, id):
 										'show_select': show_select, 'scored': scored})  
 		except Museums.DoesNotExist:
 			return render_to_response('error.html', {'code': 404})
+	else:
+		return render_to_response('error.html', {'code': 405})
+
+
+@csrf_exempt
+def delete_museum(request, id):
+	if request.method == 'POST':
+		museum = Museums.objects.get(id = id)
+		museum = Museums.objects.get(Name = museum)
+		user_login = request.user
+		instance = Selected.objects.get(Museum = museum, User = user_login)
+		instance.delete()
+		URL = "/museos/" + str(id)
+		return HttpResponseRedirect(URL)
+	else:
+		return render_to_response('error.html', {'code': 405})
+
+
+@csrf_exempt
+def select_museum(request, id):
+	if request.method == 'POST':
+		museum = Museums.objects.get(id = id)
+		date = time.strftime("%d/%m/%y")
+		user_login = request.user
+		new_selection = Selected(Museum = museum, User = user_login, Date = date)
+		new_selection.save()
+		URL = "/museos/" + str(id)
+		return HttpResponseRedirect(URL)
+	else:
+		return render_to_response('error.html', {'code': 405})
+
+
+@csrf_exempt
+def comment_museum(request, id):
+	if request.method == 'POST':
+		if 'comment' in request.POST:
+			museum = Museums.objects.get(id = id)
+			comment = request.POST['comment']
+			if comment: # Para el caso de que el mensaje venga vacio.
+				new_comment = Comments(Museum = museum,  Commentary = comment)
+				new_comment.save()
+		URL = "/museos/" + str(id)
+		return HttpResponseRedirect(URL)
 	else:
 		return render_to_response('error.html', {'code': 405})
 
@@ -230,7 +256,7 @@ def xml_user(request, name):
 			return render_to_response('error.html', {'code': 404})
 
 		selection = Selected.objects.filter(User = user)
-		# EL content_type = "text/xml" INDICA COMO QUIERO MOSTRAR LOS DATOS EN EL NAVEGADOR
+		# El content_type = "text/xml" indica como quiero mostrar los datos en el navegador.
 		return render_to_response('xml_user.xml', {'user': user, 'selection': selection}, content_type = "text/xml")
 	else:
 		return render_to_response('error.html', {'code': 405})

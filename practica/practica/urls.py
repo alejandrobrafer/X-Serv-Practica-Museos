@@ -22,19 +22,23 @@ from museos.feed import Feeds
 
 urlpatterns = [
     url(r'^feeds$', Feeds()),
+    url(r'^update_BBDD$', 'museos.views.BBDD', name = "Función para actualizar la base de datos."),
     url(r'^update_password$', 'museos.views.password', name = "Función para actualizar la contraseña."),
     url(r'^register$', 'museos.views.register', name = "Función que proporciona el registro."),
     url(r'^logout$', logout, {'next_page': '/'}),
     url(r'^login$', 'museos.views.login', name = "Función que proporciona el logeado."),
     url(r'^admin/', include(admin.site.urls)),
-    url(r'templates/style\.css', 'museos.views.define_style', name = "Función para definir el estilo CSS."),
+    url(r'templates/style\.css', 'museos.views.define_style', name = "Función para definir el estilo CSS."), # URL necesaria para no mostrar el CSS éstatico.
  	url(r'^about$', 'museos.views.about', name = "Página para más informacion."),
 	url(r'^museos/(\d+)$', 'museos.views.museum_page', name = "Página del museo."),
+    url(r'^museos/(\d+)/comentar$', 'museos.views.comment_museum', name = "Función para comentar el museo."),
+    url(r'^museos/(\d+)/eliminar$', 'museos.views.delete_museum', name = "Función para eliminar el museo."),
     url(r'^museos/(\d+)/puntuar$', 'museos.views.rate_museum', name = "Función para puntuar el museo."),
+    url(r'^museos/(\d+)/seleccionar$', 'museos.views.select_museum', name = "Función para seleccionar el museo."),
 	url(r'^museos$', 'museos.views.museums', name = "Listado con todos los museos."),
 	url(r'^$', 'museos.views.home', name = "Página principal."),
     url(r'^home/xml$', 'museos.views.xml_home', name = "Canal XML de la página principal."),
     url(r'^(.+)/xml$', 'museos.views.xml_user', name = "Canal XML del usuario."),
-    url(r'templates/(?P<path>.*)$',  serve, {'document_root': settings.STATIC_URL}), # URL para el uso de los templates.
+    url(r'templates/(?P<path>.*)$',  serve, {'document_root': settings.STATIC_URL}), # URL para el uso de los templates, imágenes...
     url(r'^(.+)$', 'museos.views.user', name = "Página del usuario."),
 ]

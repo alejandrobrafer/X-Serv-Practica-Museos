@@ -24,30 +24,29 @@
 		<center><font face="courier new" color= #626567 size=2>"<i>{{comment.Commentary | safe}}"</i></font></center><br/>
 	{% endfor %}
 	-------------------------------------------
+	<br/><br/>
 	<form method="POST" action="/museos/{{museum.id | safe}}/puntuar ">
 		<input type="submit" value=" Puntuar " />
 	</form>
 	<br/><br/>
 
 	{% if user.is_authenticated %}
-		<form method="POST" action="">
+		<form method="POST" action="/museos/{{museum.id | safe}}/comentar">
 	    	<textarea name="comment" rows="10" cols="20" placeholder="Escribe aquí tus comentarios"></textarea>
 	    	<input type="submit" value="Enviar" />
 	  		<br/>
 	 	</form><br/><br/>
 
 	 	{% if show_select %}
-		 	<span class="smalltitle">Te interesa</span></center>
-		 	<form method="POST" action="/museos/{{museum.id | safe}} ">
-		 		<input type="checkbox" value="{{museum.Name}}" name="select" checked/>
+		 	<center><span class="smalltitle">¿Deséas añadirlo?</span></center>
+		 	<form method="POST" action="/museos/{{museum.id | safe}}/seleccionar ">
 		    	<input type="submit" value=" Añadir " />
 		  		<br/>
 		 	</form><br/>
 		{% else %}
 			<center><font face="impact" color= "green" size= 4>AÑADIDO</center><br/>
 			<center><span class="smalltitle">¿Deséas eliminarlo?</span></center>
-		 	<form method="POST" action="/museos/{{museum.id | safe}} ">
-		 		<input type="checkbox" value="{{museum.Name}}" name="delete" checked/>
+		 	<form method="POST" action="/museos/{{museum.id | safe}}/eliminar ">
 		    	<input type="submit" value=" Eliminar " />
 		  		<br/>
 		 	</form><br/>
