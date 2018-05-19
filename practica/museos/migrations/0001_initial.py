@@ -41,7 +41,13 @@ class Migration(migrations.Migration):
                 ('Length', models.FloatField(blank=True, null=True)),
                 ('Phone', models.TextField(blank=True, null=True)),
                 ('Email', models.TextField(blank=True, null=True)),
-                ('Scored', models.PositiveIntegerField(blank=True, null=True)),
+            ],
+        ),
+        migrations.CreateModel(
+            name='Scored',
+            fields=[
+                ('id', models.AutoField(verbose_name='ID', primary_key=True, serialize=False, auto_created=True)),
+                ('Museum', models.ForeignKey(to='museos.Museums')),
             ],
         ),
         migrations.CreateModel(

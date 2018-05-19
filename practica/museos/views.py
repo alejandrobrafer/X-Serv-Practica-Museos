@@ -3,7 +3,7 @@
 from django.shortcuts import render_to_response
 from django.http import HttpResponse, HttpResponseNotFound, HttpResponseRedirect
 from django.views.decorators.csrf import csrf_exempt
-from museos.models import Museums, Selected, Comments, User_Page
+from museos.models import Museums, Selected, Comments, User_Page, Scored
 from django.contrib.auth.models import User
 # Museos con más comentario: https://docs.djangoproject.com/en/2.0/topics/db/aggregation/
 from django.db.models import Count
@@ -188,15 +188,10 @@ def museum_page(request, id):
 					museum = Museums.objects.get(Name = deleted)
 					instance = Selected.objects.get(Museum = museum, User = user_login)
 					instance.delete()
-				elif 'score' in request.POST:
-					# Al intenrarlo con otra tabla el error es al seleccionar el id (no es el mismo en las tablas)
-					scored = request.POST['score']
-					museum = Museums.objects.get(Name = scored)
-					if museum.Scored == None:
-						museum.Scored = 1
-					else:
-						museum.Scored += 1
-					museum.save()
+
+			# Bloque para sacar la puntuación total del museo en cuestión.
+			scored_list = Scored.objects.filter(Museum = museum)
+			scored = len(scored_list)
 				
 			# Bloque para determinar si puedo añadir/eliminar o no el museo a un usuario
 			show_select = True	
@@ -207,9 +202,22 @@ def museum_page(request, id):
 					show_select = False
 
 			comments = Comments.objects.filter(Museum = museum)
-			return render_to_response('museum_page.html', {'user': user_login, 'museum': museum, 'comments': comments, 'show_select': show_select})  
+			return render_to_response('museum_page.html', {'user': user_login, 'museum': museum, 'comments': comments, 
+										'show_select': show_select, 'scored': scored})  
 		except Museums.DoesNotExist:
 			return render_to_response('error.html', {'code': 404})
+	else:
+		return render_to_response('error.html', {'code': 405})
+
+
+@csrf_exempt
+def rate_museum(request, id):
+	if request.method == 'POST':
+		museum = Museums.objects.get(id = id)
+		new_scored = Scored(Museum = museum)
+		new_scored.save()
+		URL = "/museos/" + str(id)
+		return HttpResponseRedirect(URL)
 	else:
 		return render_to_response('error.html', {'code': 405})
 
